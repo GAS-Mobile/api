@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+
+const saltRounds = 10
 
 const customerSchema = new mongoose.Schema({
   name: {
@@ -9,7 +12,7 @@ const customerSchema = new mongoose.Schema({
     type: String,
     immutable: true,
     unique: true,
-    match: /\d{11}/,    
+    match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
     required: true,
   },
   email: {
@@ -24,6 +27,19 @@ const customerSchema = new mongoose.Schema({
     required: true,
   }
 })
+
+customerSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
+    next();
+  } catch (error) {
+    return next(error);
+  }
+});
 
 const Customer = mongoose.model('Customer', customerSchema)
 

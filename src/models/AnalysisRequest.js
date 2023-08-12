@@ -5,14 +5,14 @@ const analysisRequestSchema = new mongoose.Schema({
     type: String,
     immutable: true,
     unique: true,
-    match: /\d{11}/,    
+    match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
     required: true,
   },
   companyCNPJ: {
     type: String,
     immutable: true,
     unique: true,
-    match: /\d{14}/,    
+    match: /\d{2}\.\d{3}\.\d{3}\/(0001|0002)-\d{2}/,    
     required: true,
   },
   requestDate: {

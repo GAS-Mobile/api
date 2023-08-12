@@ -9,7 +9,7 @@ const analysisSchema = new mongoose.Schema({
     type: String,
     immutable: true,
     unique: true,
-    match: /\d{11}/,    
+    match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
     required: true,
   },
   firmLevelClaimScore: {

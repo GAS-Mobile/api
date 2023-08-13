@@ -1,4 +1,5 @@
 const { Analyst } = require('../models/Analyst')
+const { Customer } = require('../models/Customer')
 
 const createAnalyst = async (req, res) => {
   try {
@@ -8,6 +9,12 @@ const createAnalyst = async (req, res) => {
 
     if (analystExists) {
       return res.status(409).json({ message: 'Analyst already exists' })
+    }
+
+    const customerExists = await Customer.exists({cpf: data.cpf})
+    if (customerExists) {
+      return res.status(409)
+        .json({ message: 'There is already an account with the cpf inserted' })
     }
 
     await Analyst.create(data)

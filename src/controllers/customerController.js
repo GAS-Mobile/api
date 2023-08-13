@@ -40,7 +40,7 @@ const getCustomerByID = async (req, res) => {
     }
 
     const customer = await Customer.findById(customerID)
-      //.select({__v: 0, _id: 0, password: 0})
+      .select({_id: 0, __v:0, password: 0})
 
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' })

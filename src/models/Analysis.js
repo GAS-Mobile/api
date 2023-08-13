@@ -4,38 +4,63 @@ const analysisSchema = new mongoose.Schema({
   requestID: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'AnalysisRequest',
+    unique: true
   },
   analystCPF: {
     type: String,
     immutable: true,
-    unique: true,
     match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
     required: true,
   },
   firmLevelClaimScore: {
     type: Number,
     required: true,
+    default: 0,
   },
   firmLevelExecutionalScore: {
     type: Number,
     required: true,
+    default: 0,
   },
   ascore: {
     type: Number,
     required: true,
+    default: 0,
   },
   status: {
     type: String,
-    enum: ['Pending', 'In Progress', 'Completed'],
+    enum: ['Assigned', 'In Progress', 'Completed'],
+    required: true,
+    default: 'Assigned'
+  },
+  createdAt: {
+    type: Date,
+    default: () => Date.now(),
+    immutable: true,
     required: true,
   },
   analysisDate: {
     type: Date,
+    default: () => Date.now(),
     required: true,
   }
 })
 
-const Analysis = mongoose.model('Analysis', analysisSchema)
+analysisSchema.pre('save', async function(next) {
+  if (this.isModified('status') && this.status === 'Completed') {
+    this.analysisDate = Date.now()
+  }
+
+  if (this.isModified('firmLevelExecutionalScore') || 
+    this.isModified('firmLevelClaimScore')) {
+    this.ascore = (this.firmLevelExecutionalScore + this.firmLevelClaimScore) / 2
+  }
+
+  next()
+})
+
+const Analysis = mongoose.model('Analysis', analysisSchema, 'analyzes')
 
 module.exports = {
   analysisSchema,

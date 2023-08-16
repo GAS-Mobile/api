@@ -1,6 +1,6 @@
 const { Customer } = require('../models/Customer')
 const { Analyst } = require('../models/Analyst')
-
+// Public route
 const createCustomer = async (req, res) => {
   try {
     const data = req.body.customer
@@ -25,7 +25,7 @@ const createCustomer = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while creating the customer' })
   }
 }
-
+// Private route for admins
 const getCustomers = async (req, res) => {
   try {
     const customers = await Customer.find()
@@ -37,7 +37,7 @@ const getCustomers = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching customers' })
   }
 }
-
+// Private route for customers
 const getCustomerByID = async (req, res) => {
   try {
     const customerID = req.params.id
@@ -59,7 +59,7 @@ const getCustomerByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for customers
 const updateCustomerByID = async (req, res) => {
   try {
     const customerID = req.params.id
@@ -95,7 +95,7 @@ const updateCustomerByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for customers
 const deleteCustomerByID = async (req, res) => {
   try {
     const customerID = req.params.id

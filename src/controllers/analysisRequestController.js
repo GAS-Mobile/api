@@ -1,7 +1,7 @@
 const { AnalysisRequest } = require('../models/AnalysisRequest')
 const { Customer } = require('../models/Customer') 
 const { Company } = require('../models/Company')
-
+// Private route for customers
 const createAnalysisRequest = async (req, res) => {
   try {
     const { customerCPF, companyCNPJ } = req.body.analysisRequest
@@ -23,7 +23,7 @@ const createAnalysisRequest = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while requesting the analysis' })
   }
 }
-
+// Private route for analysts and customers
 const getAnalysisRequests = async (req, res) => {
   try {
     const requests = await AnalysisRequest.find()
@@ -35,7 +35,7 @@ const getAnalysisRequests = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for analysts and customers
 const getAnalysisRequestByID = async (req, res) => {
   try {
     const analysisRequestID = req.params.id
@@ -55,7 +55,7 @@ const getAnalysisRequestByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for analysts and customers
 const deleteAnalysisRequestByID = async (req, res) => {
   try {
     const analysisRequestID = req.params.id

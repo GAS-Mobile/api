@@ -1,7 +1,7 @@
 const { Analysis } = require('../models/Analysis')
 const { Analyst } = require('../models/Analyst')
 const { AnalysisRequest } = require('../models/AnalysisRequest')
-
+// Private route for analysts
 const createAnalysis = async (req, res) => {
   try {
     const {requestID} = req.body.analysis
@@ -26,7 +26,7 @@ const createAnalysis = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while creating the analysis' })
   }
 }
-
+// Public route
 const getAnalyzes = async (req, res) => {
   try {
     const analyzes = await Analysis.find()
@@ -38,7 +38,7 @@ const getAnalyzes = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching analyzes' })
   }
 }
-
+// Public route
 const getAnalysisByID = async (req, res) => {
   try {
     const analysisID = req.params.id
@@ -60,7 +60,7 @@ const getAnalysisByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for analysts
 const updateAnalysisByID = async (req, res) => {
   try {
     const analysisID = req.params.id
@@ -83,7 +83,7 @@ const updateAnalysisByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for analysts
 const deleteAnalysisByID = async (req, res) => {
   try {
     const analysisID = req.params.id

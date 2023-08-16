@@ -1,5 +1,5 @@
 const { Company } = require('../models/Company')
-
+// Public route
 const getAllCompanies = async (req, res) => {
   try {
     const companies = await Company.find()
@@ -11,12 +11,12 @@ const getAllCompanies = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for ????
 const createCompany = async (req, res) => {
   try {
     const data = req.body.company
     
-    companyExists = await Company.exists({ cnpj: data.cnpj })
+    const companyExists = await Company.exists({ cnpj: data.cnpj })
     if(companyExists) {
       return res.status(409).json({ message: 'Company already exists' })
     }
@@ -28,7 +28,7 @@ const createCompany = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Public route
 const getCompanyByID = async (req, res) => {
   try {
     const companyID = req.params.id
@@ -50,7 +50,7 @@ const getCompanyByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for analysts
 const updateCompanyByID = async (req, res) => {
   try {
     const companyID = req.params.id
@@ -74,7 +74,7 @@ const updateCompanyByID = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
+// Private route for admins
 const deleteCompanyByID = async (req, res) => {
   try {
     const companyID = req.params.id

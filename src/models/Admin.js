@@ -3,18 +3,7 @@ const bcrypt = require('bcrypt')
 
 const saltRounds = 10
 
-const analystSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  cpf: {
-    type: String,
-    immutable: true,
-    unique: true,
-    match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
-    required: true,
-  },
+const adminSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
@@ -28,7 +17,7 @@ const analystSchema = new mongoose.Schema({
   }
 })
 
-analystSchema.pre('save', async function(next) {
+adminSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
   try {
@@ -41,9 +30,9 @@ analystSchema.pre('save', async function(next) {
   }
 });
 
-const Analyst = mongoose.model('Analyst', analystSchema)
+const Admin = mongoose.model('Admin', adminSchema)
 
 module.exports = {
-  analystSchema,
-  Analyst,
+  adminSchema,
+  Admin,
 }

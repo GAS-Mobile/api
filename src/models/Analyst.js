@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const analystSchema = new mongoose.Schema({
-  user_id: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     immutable: true,
@@ -14,7 +14,6 @@ const analystSchema = new mongoose.Schema({
   },
   cpf: {
     type: String,
-    immutable: true,
     unique: true,
     match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
     required: true,

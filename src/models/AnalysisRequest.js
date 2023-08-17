@@ -1,17 +1,17 @@
 const mongoose = require('mongoose')
 
 const analysisRequestSchema = new mongoose.Schema({
-  customerCPF: {
-    type: String,
-    immutable: true,
-    match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
+  customer: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'Customer',
+    immutable: true,
   },
-  companyCNPJ: {
-    type: String,
-    immutable: true,
-    match: /\d{2}\.\d{3}\.\d{3}\/(0001|0002)-\d{2}/,    
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'Company',
+    immutable: true,
   },
   requestDate: {
     type: Date,

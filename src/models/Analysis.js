@@ -1,17 +1,18 @@
 const mongoose = require('mongoose')
 
 const analysisSchema = new mongoose.Schema({
-  requestID: {
+  request: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'AnalysisRequest',
-    unique: true
+    unique: true,
+    immutable: true
   },
-  analystCPF: {
-    type: String,
-    immutable: true,
-    match: /\d{3}\.\d{3}\.\d{3}-\d{2}/,
+  analyst: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'Analyst',
+    immutable: true,
   },
   firmLevelClaimScore: {
     type: Number,

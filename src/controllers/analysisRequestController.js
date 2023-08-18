@@ -1,6 +1,8 @@
 const { AnalysisRequest } = require('../models/AnalysisRequest')
 const { Customer } = require('../models/Customer') 
 const { Company } = require('../models/Company')
+const { Analyst } = require('../models/Analyst') 
+const { Analysis } = require('../models/Analysis') 
 
 // Private route for customers
 const createAnalysisRequest = async (req, res) => {
@@ -96,6 +98,50 @@ const getAnalysisRequestByID = async (req, res) => {
   }
 }
 
+// Private route for analysts
+const updateAnalysisRequestByID = async (req, res) => {
+  try {
+    const analysisRequestID = req.params.id
+    const data = req.body.analysisRequest
+
+    if (!data || !data.status){
+      return res.status(400).json({ 
+        message: 'To update an analysis request a status must be provided' 
+      })
+    }
+
+    if (!analysisRequestID || analysisRequestID.length !== 24) {
+      return res.status(404).json({ message: 'Analysis request not found' })
+    }
+    
+    const analysisRequest = await AnalysisRequest.findById(analysisRequestID)
+    if (!analysisRequest) {
+      return res.status(404).json({ message: 'Analysis request not found' })
+    }
+
+    if (analysisRequest.status !== 'In analysis') {
+      return res.status(400).json({ message: 'Cannot update an analysis request that has already been analyzed' });
+    }
+
+    analysisRequest.status = data.status
+    await analysisRequest.save()
+
+    if (data.status === 'Approved'){
+      const randomAnalyst = (await Analyst.aggregate([{ $sample: { size: 1 } }])).at(0)
+
+      await Analysis.create({
+        request: analysisRequest._id, 
+        analyst: randomAnalyst._id,
+      })
+      return res.status(200).json({ message: 'Analysis request updated and analysis created successfully' });
+    } else {
+      res.status(200).json({ message: 'Analysis request updated successfully' })
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 // Private route for analysts and customers
 const deleteAnalysisRequestByID = async (req, res) => {
   try {
@@ -125,5 +171,6 @@ module.exports = {
   createAnalysisRequest,
   getAllAnalysisRequests,
   getAnalysisRequestByID,
+  updateAnalysisRequestByID,
   deleteAnalysisRequestByID
 }

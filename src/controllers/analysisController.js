@@ -1,39 +1,4 @@
 const { Analysis } = require('../models/Analysis')
-const { Analyst } = require('../models/Analyst')
-const { AnalysisRequest } = require('../models/AnalysisRequest')
-
-// Private route for analysts
-const createAnalysis = async (req, res) => {
-  try {
-    const data = req.body.analysis
-    const user = req.user
-
-    if (!data || !data.requestID){
-      return res.status(400).json({ 
-        message: 'To create a customer is necessary to send a requestID'
-      })
-    }
-
-    const analysisRequestExists = await AnalysisRequest.exists({_id: data.requestID})
-    if(!analysisRequestExists){
-      return res.status(404).json({ message: 'Analysis request not found' })
-    }
-    
-    const analysisExists = await Analysis.exists({request: data.requestID})
-    if(analysisExists){
-      return res.status(409).json({ message: 'An analysis for this request already exists' })
-    }
-
-    await Analysis.create({
-      request: data.requestID, 
-      analyst: user.analystID,
-    })
-
-    res.status(201).json({ message: 'Analysis created successfully' })
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred while creating the analysis' })
-  }
-}
 
 // Public route
 const getAllAnalyzes = async (req, res) => {
@@ -159,7 +124,6 @@ const deleteAnalysisByID = async (req, res) => {
 }
 
 module.exports = {
-  createAnalysis,
   getAllAnalyzes,
   getAnalysisByID,
   updateAnalysisByID,

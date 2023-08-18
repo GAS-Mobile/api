@@ -85,38 +85,54 @@ const login = async (req, res) => {
   }
 }
 
-const refreshTokens = (req, res) => {
-  const refreshTokenProvided = req.body.refreshToken
+const logout = async (req, res) => {
+  try {
+    const userID = req.user.userID
+    await ActiveRefreshToken.findOneAndDelete({ user: userID })
 
-  if (!refreshTokenProvided) {
-    return res.status(400).json({ 
-      message: 'Please provide a valid refresh token'
-    })
+    res.status(200).json({ message: 'Logged out successfully' })
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred during logout' })
   }
+}
 
-  jwt.verify(refreshTokenProvided, REFRESH_TOKEN_SECRET, async (error, decodedData) => {
-    if (error) {
-      return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
+const refreshTokens = (req, res) => {
+  try {
+    const refreshTokenProvided = req.body.refreshToken
+  
+    if (!refreshTokenProvided) {
+      return res.status(400).json({ 
+        message: 'Please provide a valid refresh token'
+      })
     }
-
-    const userRefreshTokenDeleted = await ActiveRefreshToken.findOneAndDelete({ user: decodedData.data.userID })
-
-    if (userRefreshTokenDeleted && userRefreshTokenDeleted.token !== refreshTokenProvided){
-      return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
-    }
-
-    const accessToken = generateAccessToken(decodedData.data)
-    const refreshToken = generateRefreshToken(decodedData.data)
-
-    await ActiveRefreshToken.create({
-      user: decodedData.data.userID,
-      token: refreshToken,
+  
+    jwt.verify(refreshTokenProvided, REFRESH_TOKEN_SECRET, async (error, decodedData) => {
+      if (error) {
+        return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
+      }
+  
+      const userRefreshTokenDeleted = await ActiveRefreshToken.findOneAndDelete({ user: decodedData.data.userID })
+  
+      if (userRefreshTokenDeleted && userRefreshTokenDeleted.token !== refreshTokenProvided){
+        return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
+      }
+  
+      const accessToken = generateAccessToken(decodedData.data)
+      const refreshToken = generateRefreshToken(decodedData.data)
+  
+      await ActiveRefreshToken.create({
+        user: decodedData.data.userID,
+        token: refreshToken,
+      })
+      return res.status(200).json({ accessToken, refreshToken })
     })
-    return res.status(200).json({ accessToken, refreshToken })
-  })
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred while refreshing tokens" });
+  }
 }
 
 module.exports = {
   login,
+  logout,
   refreshTokens,
 }

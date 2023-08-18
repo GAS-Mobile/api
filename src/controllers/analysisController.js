@@ -6,6 +6,7 @@ const { AnalysisRequest } = require('../models/AnalysisRequest')
 const createAnalysis = async (req, res) => {
   try {
     const data = req.body.analysis
+    const user = req.user
 
     if (!data || !data.requestID){
       return res.status(400).json({ 
@@ -22,12 +23,10 @@ const createAnalysis = async (req, res) => {
     if(analysisExists){
       return res.status(409).json({ message: 'An analysis for this request already exists' })
     }
-    
-    const randomAnalyst = (await Analyst.aggregate([{ $sample: { size: 1 } }])).at(0)
-    
+
     await Analysis.create({
       request: data.requestID, 
-      analyst: randomAnalyst._id,
+      analyst: user.analystID,
     })
 
     res.status(201).json({ message: 'Analysis created successfully' })
@@ -88,7 +87,6 @@ const getAnalysisByID = async (req, res) => {
     if (!analysis) {
       return res.status(404).json({ message: 'Analysis not found' })
     }
-
     res.status(200).json({ analysis })
 
   } catch (error) {
@@ -118,7 +116,7 @@ const updateAnalysisByID = async (req, res) => {
       return res.status(404).json({ message: 'Analysis not found' })
     }
 
-    if (analysis.analyst._id.toString() !== user.AnalystID) {
+    if (analysis.analyst._id.toString() !== user.analystID) {
       return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
 
@@ -149,7 +147,7 @@ const deleteAnalysisByID = async (req, res) => {
       return res.status(404).json({ message: 'Analysis not found' })
     }
 
-    if (analysis.analyst._id.toString() !== user.AnalystID) {
+    if (analysis.analyst._id.toString() !== user.analystID) {
       return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
 

@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const analysisRequestController = require('../controllers/analysisRequestController')
+const { authorize } = require('../utils/utils')
 
-router.get('/', analysisRequestController.getAnalysisRequests)
-router.post('/create/', analysisRequestController.createAnalysisRequest)
-router.get('/:id/', analysisRequestController.getAnalysisRequestByID)
-router.delete('/:id/', analysisRequestController.deleteAnalysisRequestByID)
+router.get('/', authorize(['Analyst', 'Customer']), analysisRequestController.getAllAnalysisRequests)
+router.post('/create/', authorize(['Customer']), analysisRequestController.createAnalysisRequest)
+router.get('/:id/', authorize(['Analyst', 'Customer']), analysisRequestController.getAnalysisRequestByID)
+router.delete('/:id/', authorize(['Analyst', 'Customer']), analysisRequestController.deleteAnalysisRequestByID)
 
 module.exports = router

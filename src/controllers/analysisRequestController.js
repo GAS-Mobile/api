@@ -35,12 +35,19 @@ const createAnalysisRequest = async (req, res) => {
 }
 
 // Private route for analysts and customers
-const getAnalysisRequests = async (req, res) => {
+const getAllAnalysisRequests = async (req, res) => {
   try {
+    const user = req.user
     const requests = await AnalysisRequest.find()
       .populate('company', '_id name industry cnpj headquartersLocation')
       .populate('customer', '_id user name cpf')
       .select({__v:0})
+
+    if(user.customerID){
+      requests = requests.filter((analysisRequest) => {
+        return analysisRequest.customer._id.toString() === user.customerID
+      })
+    }
       
     res.status(200).json({requests})
   } catch (error) {
@@ -51,6 +58,7 @@ const getAnalysisRequests = async (req, res) => {
 // Private route for analysts and customers
 const getAnalysisRequestByID = async (req, res) => {
   try {
+    const user = req.user
     const analysisRequestID = req.params.id
     if (!analysisRequestID || analysisRequestID.length !== 24) {
       return res.status(404).json({ message: 'Analysis request not found' })
@@ -72,6 +80,10 @@ const getAnalysisRequestByID = async (req, res) => {
       return res.status(404).json({ message: 'Analysis request not found' })
     }
 
+    if(user.customerID && analysisRequest.customer._id.toString() !== user.customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
+
     res.status(200).json({analysisRequest})
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -81,14 +93,19 @@ const getAnalysisRequestByID = async (req, res) => {
 // Private route for analysts and customers
 const deleteAnalysisRequestByID = async (req, res) => {
   try {
+    const user = req.user
     const analysisRequestID = req.params.id
     if (!analysisRequestID || analysisRequestID.length !== 24) {
       return res.status(404).json({ message: 'Analysis request not found' })
     }
     
-    const analysisRequestExists = await AnalysisRequest.exists({ _id: analysisRequestID })
-    if (!analysisRequestExists) {
+    const analysisRequest = await AnalysisRequest.findById(analysisRequestID)
+    if (!analysisRequest) {
       return res.status(404).json({ message: 'Analysis request not found' })
+    }
+
+    if(user.customerID && analysisRequest.customer._id.toString() !== user.customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
     
     await AnalysisRequest.deleteOne({ _id: analysisRequestID})
@@ -100,7 +117,7 @@ const deleteAnalysisRequestByID = async (req, res) => {
 
 module.exports = {
   createAnalysisRequest,
-  getAnalysisRequests,
+  getAllAnalysisRequests,
   getAnalysisRequestByID,
   deleteAnalysisRequestByID
 }

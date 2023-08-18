@@ -37,7 +37,7 @@ const createAnalysis = async (req, res) => {
 }
 
 // Public route
-const getAnalyzes = async (req, res) => {
+const getAllAnalyzes = async (req, res) => {
   try {
     let analyzes = await Analysis.find()
       .populate({
@@ -101,6 +101,7 @@ const updateAnalysisByID = async (req, res) => {
   try {
     const analysisID = req.params.id
     const data = req.body.analysis
+    const user = req.user
 
     if (!data || (!data.firmLevelClaimScore && !data.firmLevelExecutionalScore && !data.status)) {
       return res.status(400).json({ 
@@ -115,6 +116,10 @@ const updateAnalysisByID = async (req, res) => {
     const analysis = await Analysis.findById(analysisID)
     if (!analysis) {
       return res.status(404).json({ message: 'Analysis not found' })
+    }
+
+    if (analysis.analyst._id.toString() !== user.AnalystID) {
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
 
     if (data.firmLevelClaimScore) analysis.firmLevelClaimScore = data.firmLevelClaimScore
@@ -133,14 +138,19 @@ const updateAnalysisByID = async (req, res) => {
 const deleteAnalysisByID = async (req, res) => {
   try {
     const analysisID = req.params.id
+    const user = req.user
 
     if (!analysisID || analysisID.length !== 24) {
       return res.status(404).json({ message: 'Analysis not found' })
     }
 
-    const analysisExists = await Analysis.exists({_id: analysisID})
-    if (!analysisExists) {
+    const analysis = await Analysis.findById(analysisID)
+    if (!analysis) {
       return res.status(404).json({ message: 'Analysis not found' })
+    }
+
+    if (analysis.analyst._id.toString() !== user.AnalystID) {
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
 
     await Analysis.deleteOne({ _id: analysisID})
@@ -152,7 +162,7 @@ const deleteAnalysisByID = async (req, res) => {
 
 module.exports = {
   createAnalysis,
-  getAnalyzes,
+  getAllAnalyzes,
   getAnalysisByID,
   updateAnalysisByID,
   deleteAnalysisByID

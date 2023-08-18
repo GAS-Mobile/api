@@ -2,6 +2,20 @@ const { User } = require('../models/User')
 const { Customer } = require('../models/Customer')
 const { Analyst } = require('../models/Analyst')
 
+// Private route for admins
+const getAllCustomers = async (req, res) => {
+  try {
+    const customers = await Customer.find()
+      .populate('user', 'email _id')
+      .select({__v: 0})
+      
+    res.status(200).json({customers})
+
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while fetching customers' })
+  }
+}
+
 // Public route
 const createCustomer = async (req, res) => {
   try {
@@ -41,24 +55,16 @@ const createCustomer = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while creating the customer' })
   }
 }
-// Private route for admins
-const getCustomers = async (req, res) => {
-  try {
-    const customers = await Customer.find()
-      .populate('user', 'email _id')
-      .select({__v: 0})
-      
-    res.status(200).json({customers})
-
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred while fetching customers' })
-  }
-}
 
 // Private route for customers
 const getCustomerByID = async (req, res) => {
   try {
     const customerID = req.params.id
+    const user = req.user
+    
+    if (user.customerID !== customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!customerID || customerID.length !== 24) {
       return res.status(404).json({ message: 'Customer not found' })
@@ -83,6 +89,11 @@ const updateCustomerByID = async (req, res) => {
   try {
     const customerID = req.params.id
     const data = req.body.customer
+    const user = req.user
+    
+    if (user.customerID !== customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!data || (!data.email && !data.password && !data.name && !data.cpf)) {
       return res.status(400).json({ 
@@ -132,6 +143,11 @@ const updateCustomerByID = async (req, res) => {
 const deleteCustomerByID = async (req, res) => {
   try {
     const customerID = req.params.id
+    const user = req.user
+    
+    if (user.customerID !== customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!customerID || customerID.length !== 24) {
       return res.status(404).json({ message: 'Customer not found' })
@@ -153,7 +169,7 @@ const deleteCustomerByID = async (req, res) => {
 
 module.exports = {
   createCustomer,
-  getCustomers,
+  getAllCustomers,
   getCustomerByID,
   updateCustomerByID,
   deleteCustomerByID

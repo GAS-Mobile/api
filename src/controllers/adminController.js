@@ -28,8 +28,9 @@ const createAdmin = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while creating the admin' })
   }
 }
+
 // Private route for admins
-const getAdmins = async (req, res) => {
+const getAllAdmins = async (req, res) => {
   try {
     const admins = await Admin.find()
       .populate('user', 'email _id')
@@ -70,6 +71,11 @@ const updateAdminByID = async (req, res) => {
   try {
     const adminID = req.params.id
     const data = req.body.admin
+    const user = req.user
+    
+    if (user.adminID !== adminID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!data || (!data.email && !data.password)) {
       return res.status(400).json({ 
@@ -109,6 +115,11 @@ const updateAdminByID = async (req, res) => {
 const deleteAdminByID = async (req, res) => {
   try {
     const adminID = req.params.id
+    const user = req.user
+    
+    if (user.adminID !== adminID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!adminID || adminID.length !== 24) {
       return res.status(404).json({ message: 'Admin not found' })
@@ -130,7 +141,7 @@ const deleteAdminByID = async (req, res) => {
 
 module.exports = {
   createAdmin,
-  getAdmins,
+  getAllAdmins,
   getAdminByID,
   updateAdminByID,
   deleteAdminByID

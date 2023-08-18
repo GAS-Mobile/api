@@ -1,10 +1,11 @@
 const router = require('express').Router();
-const companyController = require('../controllers/adminController');
+const adminController = require('../controllers/adminController');
+const { authorize } = require('../utils/utils')
 
-router.get('/', companyController.getAdmins);
-router.post('/create/', companyController.createAdmin);
-router.get('/:id/', companyController.getAdminByID);
-router.put('/:id/', companyController.updateAdminByID);
-router.delete('/:id/', companyController.deleteAdminByID);
+router.get('/', authorize(['Admin']), adminController.getAllAdmins);
+router.post('/create/', authorize(['Admin']), adminController.createAdmin);
+router.get('/:id/', authorize(['Admin']), adminController.getAdminByID);
+router.put('/:id/', authorize(['Admin']), adminController.updateAdminByID);
+router.delete('/:id/', authorize(['Admin']), adminController.deleteAdminByID);
 
 module.exports = router;

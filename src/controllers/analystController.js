@@ -42,7 +42,7 @@ const createAnalyst = async (req, res) => {
 }
 
 // Private route for admins
-const getAnalysts = async (req, res) => {
+const getAllAnalysts = async (req, res) => {
   try {
     const analysts = await Analyst.find()
     .populate('user', 'email _id')
@@ -55,10 +55,17 @@ const getAnalysts = async (req, res) => {
   }
 }
 
-// Private route for admins
+// Private route for admins and analysts
 const getAnalystByID = async (req, res) => {
   try {
     const analystID = req.params.id
+    const user = req.user
+
+    if (user.analystID && user.analystID !== analystID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    } else if ((user.analystID && user.analystID !== analystID) && !user.adminID) {
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!analystID || analystID.length !== 24) {
       return res.status(404).json({ message: 'Analyst not found' })
@@ -78,11 +85,18 @@ const getAnalystByID = async (req, res) => {
   }
 }
 
-// Private route for admins
+// Private route for admins and analysts
 const updateAnalystByID = async (req, res) => {
   try {
     const analystID = req.params.id
     const data = req.body.analyst
+    const user = req.user
+
+    if (user.analystID && user.analystID !== analystID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    } else if ((user.analystID && user.analystID !== analystID) && !user.adminID) {
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!data || (!data.email && !data.password && !data.name && !data.cpf)) {
       return res.status(400).json({ 
@@ -128,10 +142,17 @@ const updateAnalystByID = async (req, res) => {
   }
 }
 
-// Private route for admins
+// Private route for admins and analysts
 const deleteAnalystByID = async (req, res) => {
   try {
     const analystID = req.params.id
+    const user = req.user
+
+    if (user.analystID && user.analystID !== analystID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    } else if ((user.analystID && user.analystID !== analystID) && !user.adminID) {
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
 
     if (!analystID || analystID.length !== 24) {
       return res.status(404).json({ message: 'Analyst not found' })
@@ -153,7 +174,7 @@ const deleteAnalystByID = async (req, res) => {
 
 module.exports = {
   createAnalyst,
-  getAnalysts,
+  getAllAnalysts,
   getAnalystByID,
   updateAnalystByID,
   deleteAnalystByID

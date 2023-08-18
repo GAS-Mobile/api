@@ -13,7 +13,7 @@ const getAllCompanies = async (req, res) => {
   }
 }
 
-// Private route for ????
+// Private route for admins
 const createCompany = async (req, res) => {
   try {
     const data = req.body.company
@@ -69,8 +69,8 @@ const getCompanyByID = async (req, res) => {
   }
 }
 
-// Private route for analysts
-const updateCompanyByID = async (req, res) => {
+// Private route for admins
+const updateCompanyByID = async (req, res) => {  
   try {
     const companyID = req.params.id
     const data = req.body.company

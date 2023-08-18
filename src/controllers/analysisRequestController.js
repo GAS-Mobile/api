@@ -6,16 +6,21 @@ const { Company } = require('../models/Company')
 const createAnalysisRequest = async (req, res) => {
   try {
     const data = req.body.analysisRequest
+    const user = req.user
 
-    if (!data || !data.customerID || !data.companyID){
+    if (!data || !data.customerID || !data.companyID || !data.motive){
       return res.status(400).json({ 
-        message: 'To create an analysis request is necessary to send customerID and companyID'
+        message: 'To create an analysis request is necessary to send customerID, companyID and motive'
       })
     }
 
     const customerExists = await Customer.exists({_id: data.customerID})
     if(!customerExists){
       return res.status(404).json({ message: 'Customer not found' })
+    }
+
+    if(user.customerID !== data.customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
     
     const companyExists = await Company.exists({_id: data.companyID})
@@ -25,7 +30,8 @@ const createAnalysisRequest = async (req, res) => {
 
     await AnalysisRequest.create({
       customer: data.customerID,
-      company: data.companyID
+      company: data.companyID,
+      motive: data.motive
     })
 
     res.status(201).json({ message: 'Analysis requested successfully' })
@@ -38,7 +44,7 @@ const createAnalysisRequest = async (req, res) => {
 const getAllAnalysisRequests = async (req, res) => {
   try {
     const user = req.user
-    const requests = await AnalysisRequest.find()
+    let requests = await AnalysisRequest.find()
       .populate('company', '_id name industry cnpj headquartersLocation')
       .populate('customer', '_id user name cpf')
       .select({__v:0})

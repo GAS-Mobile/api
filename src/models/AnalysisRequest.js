@@ -19,6 +19,17 @@ const analysisRequestSchema = new mongoose.Schema({
     immutable: true,
     required: true,
   },
+  motive: {
+    type: String,
+    required: true,
+    immutable: true
+  },
+  status: {
+    type: String,
+    enum: ['In analysis', 'Approved', 'Reproved'],
+    required: true,
+    default: 'In analysis'
+  }
 })
 
 const AnalysisRequest = mongoose.model('AnalysisRequest', analysisRequestSchema)

@@ -1,5 +1,6 @@
 require('dotenv').config()
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const { User } = require('../models/User')
 const { Admin } = require('../models/Admin')
@@ -7,6 +8,8 @@ const { Analyst } = require('../models/Analyst')
 const { Customer } = require('../models/Customer')
 const { ActiveRefreshToken } = require('../models/ActiveRefreshToken')
 const { generateAccessToken, generateRefreshToken } = require('../utils/utils')
+
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 const login = async (req, res) => {
   try {
@@ -30,11 +33,11 @@ const login = async (req, res) => {
 
     await ActiveRefreshToken.findOneAndDelete({ user: user._id })
 
-    const isAdmin = await Admin.exists({user: user._id})
-    if (isAdmin) {
+    const admin = await Admin.findOne({user: user._id})
+    if (admin) {
       const tokenData = { 
         userID: user._id,
-        typeOfUser: 'Admin'
+        adminID: admin._id,
       }
       const accessToken = generateAccessToken(tokenData)
       const refreshToken = generateRefreshToken(tokenData)
@@ -46,11 +49,11 @@ const login = async (req, res) => {
       return res.status(200).json({ accessToken, refreshToken })
     }
 
-    const isAnalyst = await Analyst.exists({user: user._id})
-    if (isAnalyst) {
+    const analyst = await Analyst.findOne({user: user._id})
+    if (analyst) {
       const tokenData = { 
         userID: user._id,
-        typeOfUser: 'Analyst'
+        analystID: analyst._id,
       }
       const accessToken = generateAccessToken(tokenData)
       const refreshToken = generateRefreshToken(tokenData)
@@ -62,11 +65,11 @@ const login = async (req, res) => {
       return res.status(200).json({ accessToken, refreshToken })
     }
 
-    const isCustomer = await Customer.exists({user: user._id})
-    if (isCustomer) {
+    const customer = await Customer.findOne({user: user._id})
+    if (customer) {
       const tokenData = { 
         userID: user._id,
-        typeOfUser: 'Customer'
+        customerID: customer._id,
       }
       const accessToken = generateAccessToken(tokenData)
       const refreshToken = generateRefreshToken(tokenData)
@@ -82,6 +85,35 @@ const login = async (req, res) => {
   }
 }
 
+const refreshTokens = (req, res) => {
+  const { refreshToken } = req.body
+
+  if (!refreshToken) {
+    return res.status(400).json({ 
+      message: 'Please provide a valid refresh token'
+    })
+  }
+
+  jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (error, decodedData) => {
+    if (error) {
+      return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
+    }
+
+    await ActiveRefreshToken.findOneAndDelete({ user: decodedData.data.userID })
+
+    const accessToken = generateAccessToken(decodedData.data)
+    const refreshToken = generateRefreshToken(decodedData.data)
+
+    await ActiveRefreshToken.create({
+      user: decodedData.data.userID,
+      token: refreshToken,
+    })
+
+    return res.status(200).json({ accessToken, refreshToken })
+  })
+}
+
 module.exports = {
   login,
+  refreshTokens,
 }

@@ -86,20 +86,24 @@ const login = async (req, res) => {
 }
 
 const refreshTokens = (req, res) => {
-  const { refreshToken } = req.body
+  const refreshTokenProvided = req.body.refreshToken
 
-  if (!refreshToken) {
+  if (!refreshTokenProvided) {
     return res.status(400).json({ 
       message: 'Please provide a valid refresh token'
     })
   }
 
-  jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (error, decodedData) => {
+  jwt.verify(refreshTokenProvided, REFRESH_TOKEN_SECRET, async (error, decodedData) => {
     if (error) {
       return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
     }
 
-    await ActiveRefreshToken.findOneAndDelete({ user: decodedData.data.userID })
+    const userRefreshTokenDeleted = await ActiveRefreshToken.findOneAndDelete({ user: decodedData.data.userID })
+
+    if (userRefreshTokenDeleted && userRefreshTokenDeleted.token !== refreshTokenProvided){
+      return res.status(401).json({ message: "The provided refresh token is invalid or expired" })
+    }
 
     const accessToken = generateAccessToken(decodedData.data)
     const refreshToken = generateRefreshToken(decodedData.data)
@@ -108,7 +112,6 @@ const refreshTokens = (req, res) => {
       user: decodedData.data.userID,
       token: refreshToken,
     })
-
     return res.status(200).json({ accessToken, refreshToken })
   })
 }

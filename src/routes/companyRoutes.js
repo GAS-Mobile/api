@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const companyController = require('../controllers/companyController');
+const { authorize } = require('../utils/utils')
 
 router.get('/', companyController.getAllCompanies);
-router.post('/create/', companyController.createCompany);
+router.post('/create/', authorize(['Admin']), companyController.createCompany);
 router.get('/:id/', companyController.getCompanyByID);
-router.put('/:id/', companyController.updateCompanyByID);
-router.delete('/:id/', companyController.deleteCompanyByID);
+router.put('/:id/', authorize(['Admin']), companyController.updateCompanyByID);
+router.delete('/:id/', authorize(['Admin']), companyController.deleteCompanyByID);
 
 module.exports = router;

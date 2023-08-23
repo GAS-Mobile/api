@@ -39,6 +39,11 @@ const companySchema = new mongoose.Schema({
     match: /\d{2}\.\d{3}\.\d{3}\/(0001|0002)-\d{2}/,    
     required: true,
   },
+  score: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   headquartersLocation: addressSchema,
 })
 

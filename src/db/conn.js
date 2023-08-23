@@ -1,6 +1,9 @@
+require('dotenv').config()
 const mongoose = require('mongoose');
 
-const databaseURI = 'mongodb://127.0.0.1:27017/gas'
+const dbUser = process.env.DB_USER
+const dbPassword = process.env.DB_PASSWORD 
+const databaseURI = `mongodb+srv://${dbUser}:${dbPassword}@cluster0.f5syrxp.mongodb.net/?retryWrites=true&w=majority`
 
 const main = async () => {
   await mongoose.connect(databaseURI, {

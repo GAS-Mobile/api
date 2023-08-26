@@ -22,6 +22,14 @@ const doc = {
       name: 'Admins',
       description: 'Endpoints for handling admins and their data'
     },
+    {
+      name: 'Analysts',
+      description: 'Endpoints for handling analysts and their data'
+    },
+    {
+      name: 'Customers',
+      description: 'Endpoints for handling customers and their data'
+    },
   ],
   components: {
     securitySchemes:{
@@ -50,6 +58,12 @@ const doc = {
         $name: "analyst",
         $cpf: "000.000.000-00",
         $email: 'analyst@gmail.com',
+        $password: '123456',
+      },
+      customer: {
+        $name: "customer",
+        $cpf: "000.000.000-00",
+        $email: 'customer@gmail.com',
         $password: '123456',
       }
     },

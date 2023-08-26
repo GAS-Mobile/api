@@ -19,203 +19,17 @@
     {
       "name": "Admins",
       "description": "Endpoints for handling admins and their data"
+    },
+    {
+      "name": "Analysts",
+      "description": "Endpoints for handling analysts and their data"
+    },
+    {
+      "name": "Customers",
+      "description": "Endpoints for handling customers and their data"
     }
   ],
   "paths": {
-    "/api/v1/customers/": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/v1/customers/create/": {
-      "post": {
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "customer": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/customers/{id}/": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "customer": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/api/v1/companies/": {
       "get": {
         "description": "",
@@ -731,6 +545,474 @@
             "description": "Internal Server Error"
           }
         }
+      }
+    },
+    "/api/v1/customers/": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for admins",
+        "description": "List all customers.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customers": [
+                    {
+                      "_id": "64e681dafsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc1d9jj7697dd",
+                        "email": "customer@gmail.com"
+                      },
+                      "name": "customer",
+                      "cpf": "000.000.000-00"
+                    },
+                    {
+                      "_id": "64e60000fsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsda099d9jj7697dd",
+                        "email": "customer2@gmail.com"
+                      },
+                      "name": "customer",
+                      "cpf": "001.000.000-00"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching customers"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/create/": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Public route",
+        "description": "Creates a new customer.",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create a customer is necessary to send email, password, name and CPF"
+                }
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Email is already in use by another user"
+                    },
+                    {
+                      "message": "CPF is already in use by another user"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/customers/{id}/": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for admins and the customer with the specified ID",
+        "description": "Shows information about one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customer": {
+                    "_id": "64e681dafsd11f2d381231b9",
+                    "user": {
+                      "_id": "64e68e2lsdakc1d9jj7697dd",
+                      "email": "customer@gmail.com"
+                    },
+                    "name": "customer",
+                    "cpf": "000.000.000-00"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the analyst"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for admins and the customer with the specified ID",
+        "description": "Updates information about one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update a customer, at least one field (email, password, name, cpf) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Email is already in use by another user"
+                    },
+                    {
+                      "message": "CPF is already in use by another user"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customer"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for admins and the customer with the specified ID",
+        "description": "Deletes one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/analysts/": {
@@ -1973,6 +2255,33 @@
           "email": {
             "type": "string",
             "example": "analyst@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "name",
+          "cpf",
+          "email",
+          "password"
+        ]
+      },
+      "customer": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "customer"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "000.000.000-00"
+          },
+          "email": {
+            "type": "string",
+            "example": "customer@gmail.com"
           },
           "password": {
             "type": "string",

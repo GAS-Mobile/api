@@ -4,6 +4,47 @@ const { Analyst } = require('../models/Analyst')
 
 // Private route for admins
 const getAllCustomers = async (req, res) => {
+  /*
+    #swagger.summary = "Private route for admins"
+    #swagger.description = "List all customers."
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            customers: [
+              {
+                "_id": "64e681dafsd11f2d381231b9",
+                "user": {
+                  "_id": "64e68e2lsdakc1d9jj7697dd",
+                  "email": "customer@gmail.com"
+                },
+                "name": "customer",
+                "cpf": "000.000.000-00"
+              },
+              {
+                "_id": "64e60000fsd11f2d381231b9",
+                "user": {
+                  "_id": "64e68e2lsda099d9jj7697dd",
+                  "email": "customer2@gmail.com"
+                },
+                "name": "customer",
+                "cpf": "001.000.000-00"
+              }
+            ]
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching customers"
+          }
+        }           
+      }
+    }
+  */
   try {
     const customers = await Customer.find()
       .populate('user', 'email _id')
@@ -18,6 +59,47 @@ const getAllCustomers = async (req, res) => {
 
 // Public route
 const createCustomer = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "Creates a new customer."
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/customer"
+          }  
+        }
+      }
+    }
+    #swagger.responses[201] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Customer created successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To create a customer is necessary to send email, password, name and CPF"
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while creating the customer"
+          }
+        }           
+      }
+    }
+  */
   try {
     const data = req.body.customer
 
@@ -58,6 +140,48 @@ const createCustomer = async (req, res) => {
 
 // Private route for customers
 const getCustomerByID = async (req, res) => {
+  /*
+    #swagger.description = "Shows information about one customer determined by ID."
+    #swagger.summary = "Private route for admins and the customer with the specified ID"
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            customer: {
+              "_id": "64e681dafsd11f2d381231b9",
+              "user":{
+                "_id": "64e68e2lsdakc1d9jj7697dd",
+                "email": "customer@gmail.com"
+              },
+              "name": "customer",
+              "cpf": "000.000.000-00"
+            },
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]        
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching the analyst"
+          }
+        }           
+      }
+    }
+  */
   try {
     const customerID = req.params.id
     const user = req.user
@@ -80,12 +204,65 @@ const getCustomerByID = async (req, res) => {
 
     res.status(200).json({customer})
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while fetching the customer' })
   }
 }
 
 // Private route for customers
 const updateCustomerByID = async (req, res) => {
+  /*
+    #swagger.description = "Updates information about one customer determined by ID."
+    #swagger.summary = "Private route for admins and the customer with the specified ID"
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/customer"
+          }  
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Customer updated successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To update a customer, at least one field (email, password, name, cpf) must be provided"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]        
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while updating the customer"
+          }
+        }           
+      }
+    }
+  */
   try {
     const customerID = req.params.id
     const data = req.body.customer
@@ -141,6 +318,40 @@ const updateCustomerByID = async (req, res) => {
 
 // Private route for customers
 const deleteCustomerByID = async (req, res) => {
+  /*
+    #swagger.description = "Deletes one customer determined by ID."
+    #swagger.summary = "Private route for admins and the customer with the specified ID"
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Customer deleted successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]        
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while deleting the customer"
+          }
+        }           
+      }
+    }
+  */
   try {
     const customerID = req.params.id
     const user = req.user
@@ -163,7 +374,7 @@ const deleteCustomerByID = async (req, res) => {
 
     res.status(200).json({ message: 'Customer deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while deleting the customer' })
   }
 }
 

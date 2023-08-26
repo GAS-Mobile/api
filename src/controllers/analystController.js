@@ -4,6 +4,47 @@ const { Customer } = require('../models/Customer')
 
 // Private route for admins
 const createAnalyst = async (req, res) => {
+  /*
+    #swagger.summary = "Private route for admins"
+    #swagger.description = "Creates a new analyst."
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/analyst"
+          }  
+        }
+      }
+    }
+    #swagger.responses[201] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Analyst created successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To create an analyst is necessary to send email, password, name and CPF"
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while creating the analyst"
+          }
+        }           
+      }
+    }
+  */
   try {
     const data = req.body.analyst
 
@@ -43,6 +84,47 @@ const createAnalyst = async (req, res) => {
 
 // Private route for admins
 const getAllAnalysts = async (req, res) => {
+  /*
+    #swagger.summary = "Private route for admins"
+    #swagger.description = "List all analysts."
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            analysts: [
+              {
+                "_id": "64e681dafsd11f2d381231b9",
+                "user": {
+                  "_id": "64e68e2lsdakc1d9jj7697dd",
+                  "email": "analyst@gmail.com"
+                },
+                "name": "analyst",
+                "cpf": "000.000.000-00"
+              },
+              {
+                "_id": "64e60000fsd11f2d381231b9",
+                "user": {
+                  "_id": "64e68e2lsda099d9jj7697dd",
+                  "email": "analyst2@gmail.com"
+                },
+                "name": "analyst",
+                "cpf": "001.000.000-00"
+              }
+            ]
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching analysts"
+          }
+        }           
+      }
+    }
+  */
   try {
     const analysts = await Analyst.find()
     .populate('user', 'email _id')
@@ -57,6 +139,48 @@ const getAllAnalysts = async (req, res) => {
 
 // Private route for admins and analysts
 const getAnalystByID = async (req, res) => {
+  /*
+    #swagger.description = "Shows information about one analyst determined by ID."
+    #swagger.summary = "Private route for admins and the analyst with the specified ID"
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            analyst: {
+              "_id": "64e681dafsd11f2d381231b9",
+              "user":{
+                "_id": "64e68e2lsdakc1d9jj7697dd",
+                "email": "analyst@gmail.com"
+              },
+              "name": "analyst",
+              "cpf": "000.000.000-00"
+            },
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]        
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching the analyst"
+          }
+        }           
+      }
+    }
+  */
   try {
     const analystID = req.params.id
     const user = req.user
@@ -81,12 +205,65 @@ const getAnalystByID = async (req, res) => {
 
     res.status(200).json({ analyst })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while fetching the analyst' })
   }
 }
 
 // Private route for admins and analysts
 const updateAnalystByID = async (req, res) => {
+  /*
+    #swagger.description = "Updates information about one analyst determined by ID."
+    #swagger.summary = "Private route for admins and the analyst with the specified ID"
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/analyst"
+          }  
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Analyst updated successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To update an analyst, at least one field (email, password, name, cpf) must be provided"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]        
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while updating the analyst"
+          }
+        }           
+      }
+    }
+  */
   try {
     const analystID = req.params.id
     const data = req.body.analyst
@@ -144,6 +321,40 @@ const updateAnalystByID = async (req, res) => {
 
 // Private route for admins and analysts
 const deleteAnalystByID = async (req, res) => {
+  /*
+    #swagger.description = "Deletes one analyst determined by ID."
+    #swagger.summary = "Private route for admins and the analyst with the specified ID"
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Analyst deleted successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]        
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while deleting the analyst"
+          }
+        }           
+      }
+    }
+  */
   try {
     const analystID = req.params.id
     const user = req.user
@@ -168,7 +379,7 @@ const deleteAnalystByID = async (req, res) => {
 
     res.status(200).json({ message: 'Analyst deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while deleting the analyst' })
   }
 }
 

@@ -45,6 +45,12 @@ const doc = {
       admin: {
         $email: 'admin@gmail.com',
         $password: '123456',
+      },
+      analyst: {
+        $name: "analyst",
+        $cpf: "000.000.000-00",
+        $email: 'analyst@gmail.com',
+        $password: '123456',
       }
     },
   }

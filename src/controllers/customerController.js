@@ -61,6 +61,7 @@ const getAllCustomers = async (req, res) => {
 const createCustomer = async (req, res) => {
   /*
     #swagger.summary = "Public route"
+    #swagger.security = []
     #swagger.description = "Creates a new customer."
     #swagger.requestBody = {
       required: true,
@@ -142,7 +143,7 @@ const createCustomer = async (req, res) => {
 const getCustomerByID = async (req, res) => {
   /*
     #swagger.description = "Shows information about one customer determined by ID."
-    #swagger.summary = "Private route for admins and the customer with the specified ID"
+    #swagger.summary = "Private route for the customer with the specified ID"
     #swagger.responses[200] = {
       content: {
         "application/json": {
@@ -176,7 +177,7 @@ const getCustomerByID = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            message: "An error occurred while fetching the analyst"
+            message: "An error occurred while fetching the customer"
           }
         }           
       }
@@ -212,7 +213,7 @@ const getCustomerByID = async (req, res) => {
 const updateCustomerByID = async (req, res) => {
   /*
     #swagger.description = "Updates information about one customer determined by ID."
-    #swagger.summary = "Private route for admins and the customer with the specified ID"
+    #swagger.summary = "Private route for the customer with the specified ID"
     #swagger.requestBody = {
       required: true,
       content: {
@@ -320,7 +321,7 @@ const updateCustomerByID = async (req, res) => {
 const deleteCustomerByID = async (req, res) => {
   /*
     #swagger.description = "Deletes one customer determined by ID."
-    #swagger.summary = "Private route for admins and the customer with the specified ID"
+    #swagger.summary = "Private route for the customer with the specified ID"
     #swagger.responses[200] = {
       content: {
         "application/json": {

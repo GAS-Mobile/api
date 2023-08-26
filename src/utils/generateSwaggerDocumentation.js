@@ -30,6 +30,10 @@ const doc = {
       name: 'Customers',
       description: 'Endpoints for handling customers and their data'
     },
+    {
+      name: 'Companies',
+      description: 'Endpoints for handling companies and their data'
+    },
   ],
   components: {
     securitySchemes:{
@@ -65,6 +69,18 @@ const doc = {
         $cpf: "000.000.000-00",
         $email: 'customer@gmail.com',
         $password: '123456',
+      },
+      company: {
+        $name: "XYZ Enterprises",
+        $industry: "Finance",
+        $cnpj: "00.705.432/0001-02",
+        $headquartersLocation: {
+          $street: "456 Elm Avenue",
+          $city: "Townsville",
+          $state: "Province",
+          $postalCode: "50000-000",
+          $country: "Country"
+        }
       }
     },
   }

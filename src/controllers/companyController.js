@@ -2,19 +2,108 @@ const { Company } = require('../models/Company')
 
 // Public route
 const getAllCompanies = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "List all companies."
+    #swagger.security = []
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            companies: [
+              {
+                name: "XYZ Enterprises",
+                industry: "Finance",
+                cnpj: "00.705.432/0001-02",
+                headquartersLocation: {
+                  street: "456 Elm Avenue",
+                  city: "Townsville",
+                  state: "Province",
+                  postalCode: "50000-000",
+                  country: "Country"
+                }
+              },
+              {
+                name: "XYZ Enterprises",
+                industry: "Finance",
+                cnpj: "12.705.432/0001-02",
+                headquartersLocation: {
+                  street: "456 Elm Avenue",
+                  city: "Townsville",
+                  state: "Province",
+                  postalCode: "50000-000",
+                  country: "Country"
+                }
+              },
+            ]
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching companies"
+          }
+        }           
+      }
+    }
+  */
   try {
     const companies = await Company.find()
       .select({__v: 0, 'headquartersLocation._id': 0})
       
-    res.json({companies})
+    res.status(200).json({companies})
 
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while fetching companies' })
   }
 }
 
 // Private route for admins
 const createCompany = async (req, res) => {
+  /*
+    #swagger.summary = "Private route for admins"
+    #swagger.description = "Creates a new company."
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            ref: "#/components/schemas/company"
+          }  
+        }
+      }
+    }
+    #swagger.responses[201] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Company created successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To create a company is necessary to send name, industry, CNPJ and headquartersLocation."
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while creating the company"
+          }
+        }           
+      }
+    }
+  */
   try {
     const data = req.body.company
 
@@ -43,12 +132,46 @@ const createCompany = async (req, res) => {
     res.status(201).json({ message: 'Company created successfully' })
 
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while creating the company' })
   }
 }
 
 // Public route
 const getCompanyByID = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "List all companies."
+    #swagger.security = []
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            company: {
+              name: "XYZ Enterprises",
+              industry: "Finance",
+              cnpj: "00.705.432/0001-02",
+              headquartersLocation: {
+                street: "456 Elm Avenue",
+                city: "Townsville",
+                state: "Province",
+                postalCode: "50000-000",
+                country: "Country"
+              }
+            }
+          }  
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching the company"
+          }
+        }           
+      }
+    }
+  */
   try {
     const companyID = req.params.id
 
@@ -65,12 +188,53 @@ const getCompanyByID = async (req, res) => {
 
     res.status(200).json({company})
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while fetching the company' })
   }
 }
 
 // Private route for admins
 const updateCompanyByID = async (req, res) => {  
+  /*
+    #swagger.description = "Updates information about one company determined by ID."
+    #swagger.summary = "Private route for admins"
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/company"
+          }  
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Company updated successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To update a company, at least one field (name, industry, CNPJ, headquartersLocation) must be provided"
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while updating the company"
+          }
+        }           
+      }
+    }
+  */
   try {
     const companyID = req.params.id
     const data = req.body.company
@@ -116,12 +280,34 @@ const updateCompanyByID = async (req, res) => {
 
     res.status(200).json({ message: 'Company updated successfully' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while updating the company' })
   }
 }
 
 // Private route for admins
 const deleteCompanyByID = async (req, res) => {
+  /*
+    #swagger.description = "Deletes one company determined by ID."
+    #swagger.summary = "Private route for admins"
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Company deleted successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while deleting the company"
+          }
+        }           
+      }
+    }
+  */
   try {
     const companyID = req.params.id
 
@@ -137,7 +323,7 @@ const deleteCompanyByID = async (req, res) => {
     await Company.deleteOne({ _id: companyID})
     res.status(200).json({ message: 'Company deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: 'An error occurred while deleting the company' })
   }
 }
 

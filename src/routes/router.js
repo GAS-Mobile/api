@@ -7,9 +7,56 @@ const analysisRoutes = require('./analysisRoutes')
 const adminRoutes = require('./adminRoutes')
 const authRoutes = require('./authRoutes')
 
-router.use('/companies', companyRoutes)
 router.use('/requests', analysisRequestRoutes)
 router.use('/analyzes', analysisRoutes)
+router.use('/companies', companyRoutes
+/* 
+  #swagger.tags = ['Companies']
+  #swagger.security = [{
+    "bearerAuth": []
+  }]
+  #swagger.responses[401] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "Unauthorized access"
+        }
+      }           
+    }
+  }
+  #swagger.responses[403] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "You do not have sufficient privileges to access this route"
+        }
+      }           
+    }
+  }
+  #swagger.responses[404] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "Company not found"
+        }
+      }           
+    }
+  }
+    #swagger.responses[409] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "CNPJ is already in use by another company"
+        }
+      }           
+    }
+  }
+*/
+)
 router.use('/customers', customerRoutes
 /* 
   #swagger.tags = ['Customers']

@@ -27,190 +27,13 @@
     {
       "name": "Customers",
       "description": "Endpoints for handling customers and their data"
+    },
+    {
+      "name": "Companies",
+      "description": "Endpoints for handling companies and their data"
     }
   ],
   "paths": {
-    "/api/v1/companies/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/v1/companies/create/": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "company": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/companies/{id}/": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "409": {
-            "description": "Conflict"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "company": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/api/v1/requests/": {
       "get": {
         "description": "",
@@ -547,6 +370,413 @@
         }
       }
     },
+    "/api/v1/companies/": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Public route",
+        "description": "List all companies.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "companies": [
+                    {
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "00.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country"
+                      }
+                    },
+                    {
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "12.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching companies"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/companies/create/": {
+      "post": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Private route for admins",
+        "description": "Creates a new company.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create a company is necessary to send name, industry, CNPJ and headquartersLocation."
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "CNPJ is already in use by another company"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the company"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "ref": "#/components/schemas/company"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{id}/": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Public route",
+        "description": "List all companies.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "company": {
+                    "name": "XYZ Enterprises",
+                    "industry": "Finance",
+                    "cnpj": "00.705.432/0001-02",
+                    "headquartersLocation": {
+                      "street": "456 Elm Avenue",
+                      "city": "Townsville",
+                      "state": "Province",
+                      "postalCode": "50000-000",
+                      "country": "Country"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the company"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Private route for admins",
+        "description": "Updates information about one company determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update a company, at least one field (name, industry, CNPJ, headquartersLocation) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "CNPJ is already in use by another company"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the company"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/company"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Private route for admins",
+        "description": "Deletes one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the company"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/customers/": {
       "get": {
         "tags": [
@@ -687,11 +917,7 @@
             }
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -709,7 +935,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Private route for admins and the customer with the specified ID",
+        "summary": "Private route for the customer with the specified ID",
         "description": "Shows information about one customer determined by ID.",
         "parameters": [
           {
@@ -789,7 +1015,7 @@
             "content": {
               "application/json": {
                 "example": {
-                  "message": "An error occurred while fetching the analyst"
+                  "message": "An error occurred while fetching the customer"
                 }
               }
             }
@@ -805,7 +1031,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Private route for admins and the customer with the specified ID",
+        "summary": "Private route for the customer with the specified ID",
         "description": "Updates information about one customer determined by ID.",
         "parameters": [
           {
@@ -930,7 +1156,7 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Private route for admins and the customer with the specified ID",
+        "summary": "Private route for the customer with the specified ID",
         "description": "Deletes one customer determined by ID.",
         "parameters": [
           {
@@ -2293,6 +2519,61 @@
           "cpf",
           "email",
           "password"
+        ]
+      },
+      "company": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "XYZ Enterprises"
+          },
+          "industry": {
+            "type": "string",
+            "example": "Finance"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "00.705.432/0001-02"
+          },
+          "headquartersLocation": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string",
+                "example": "456 Elm Avenue"
+              },
+              "city": {
+                "type": "string",
+                "example": "Townsville"
+              },
+              "state": {
+                "type": "string",
+                "example": "Province"
+              },
+              "postalCode": {
+                "type": "string",
+                "example": "50000-000"
+              },
+              "country": {
+                "type": "string",
+                "example": "Country"
+              }
+            },
+            "required": [
+              "street",
+              "city",
+              "state",
+              "postalCode",
+              "country"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "industry",
+          "cnpj",
+          "headquartersLocation"
         ]
       }
     }

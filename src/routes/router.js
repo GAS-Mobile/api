@@ -13,6 +13,10 @@ router.use('/analysts', analystRoutes)
 router.use('/requests', analysisRequestRoutes)
 router.use('/analyzes', analysisRoutes)
 router.use('/admins', adminRoutes)
-router.use('/auth', authRoutes)
+router.use('/auth', authRoutes
+/* 
+  #swagger.tags = ['Auth']
+*/
+)
 
 module.exports = router

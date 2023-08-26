@@ -15,6 +15,10 @@
     {
       "name": "Auth",
       "description": "Endpoints for handling user authentication"
+    },
+    {
+      "name": "Admins",
+      "description": "Endpoints for handling admins and their data"
     }
   ],
   "paths": {
@@ -940,7 +944,11 @@
     },
     "/api/v1/admins/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "List all admins.",
         "parameters": [
           {
             "name": "authorization",
@@ -952,24 +960,75 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "admins": [
+                    {
+                      "_id": "64e681dafsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc1d9jj7697dd",
+                        "email": "admin1@gmail.com"
+                      }
+                    },
+                    {
+                      "_id": "64e681252bddef2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc182fc7697dd",
+                        "email": "admin2@gmail.com"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching admins"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/admins/create/": {
       "post": {
-        "summary": "Some summary...",
-        "description": "Some description...",
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Creates a new admin.",
         "parameters": [
           {
             "name": "authorization",
@@ -981,34 +1040,77 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin created successfully"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create an admin is necessary to send email and password"
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email is already in use by another user"
+                }
+              }
+            },
             "description": "Conflict"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the admin"
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "admin": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/admin"
               }
             }
           }
@@ -1017,7 +1119,11 @@
     },
     "/api/v1/admins/{id}/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Shows information about one admin determined by ID.",
         "parameters": [
           {
             "name": "id",
@@ -1037,24 +1143,74 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "admin": {
+                    "_id": "64e681dafsd11f2d381231b9",
+                    "user": {
+                      "_id": "64e68e2lsdakc1d9jj7697dd",
+                      "email": "admin1@gmail.com"
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin not found"
+                }
+              }
+            },
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the admin"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Update information about one admin determined by ID.",
         "parameters": [
           {
             "name": "id",
@@ -1074,44 +1230,105 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin updated successfully"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update an admin, at least one field (email, password) must be provided"
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin not found"
+                }
+              }
+            },
             "description": "Not Found"
           },
           "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email is already in use by another user"
+                }
+              }
+            },
             "description": "Conflict"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the admin"
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "admin": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/admin"
               }
             }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Deletes one admin determined by ID.",
         "parameters": [
           {
             "name": "id",
@@ -1131,21 +1348,68 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin deleted successfully"
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin not found"
+                }
+              }
+            },
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the admin"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/auth/login/": {
@@ -1280,7 +1544,7 @@
           "Auth"
         ],
         "summary": "Public route",
-        "description": "Deletes the refresh token for the authenticated user",
+        "description": "Receives a refresh token and, if the token is valid, sends a new pair of tokens",
         "responses": {
           "200": {
             "description": "OK",
@@ -1388,6 +1652,23 @@
         },
         "required": [
           "refreshToken"
+        ]
+      },
+      "admin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "email",
+          "password"
         ]
       }
     }

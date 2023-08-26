@@ -18,6 +18,10 @@ const doc = {
       name: 'Auth',
       description: 'Endpoints for handling user authentication'
     },
+    {
+      name: 'Admins',
+      description: 'Endpoints for handling admins and their data'
+    },
   ],
   components: {
     securitySchemes:{
@@ -38,6 +42,10 @@ const doc = {
       refreshToken: {
         $refreshToken: 'eyJhbOi12dIU6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJRCI6IjY0ZGYyZTE2MjVmYjQwMDllMmUwZjfasdfwZjc5ZSJ9gsIdDASdV4cCI6MTY5NjIzOH0.32314EPF_kcutZhfQL3HQkKVuudPg'
       },
+      admin: {
+        $email: 'admin@gmail.com',
+        $password: '123456',
+      }
     },
   }
 }

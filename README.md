@@ -1,6 +1,6 @@
 # GAS - Mobile Backend: Running the Project
 
-Welcome to the API repository for the GAS-Mobile application. This guide will walk you through the steps to set up and run the API on your local machine using MongoDB Atlas as the database.
+Welcome to the API repository for the GAS-Mobile application. This guide will walk you through the steps to set up, run, and interact with the API on your local machine using MongoDB Atlas as the database.
 
 ## Getting Started
 
@@ -43,6 +43,16 @@ npm start
 ```
 
 This command initiates the API server using the configuration specified in the `.env` file. By default, the API will be accessible through port 3000.
+
+## API Documentation
+
+The API documentation is automatically generated using the `npm run gen-doc` command. To view the documentation, make sure the API server is running (`npm start`) and then access the following URL in your web browser:
+
+```
+http://localhost:3000/api-docs/
+```
+
+The API documentation provides detailed information about the available endpoints, request parameters, request bodies, and responses.
 
 ## Contributing
 

@@ -40,20 +40,76 @@
   "paths": {
     "/api/v1/analyzes/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Public route",
+        "description": "List all analyzes.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "analyzes": [
+                    {
+                      "_id": "64dfe7a07bc2d9ba5c315790",
+                      "request": {
+                        "_id": "64dfe6d47bc2d9ba5c315769",
+                        "customer": "64dfe6317bc2d9ba5c31575b",
+                        "company": {
+                          "_id": "64dfe6267bc2d9ba5c315753",
+                          "name": "XYZ Enterprises",
+                          "industry": "Finance",
+                          "cnpj": "00.705.432/0001-02",
+                          "score": 0,
+                          "headquartersLocation": {
+                            "street": "456 Elm Avenue",
+                            "city": "Townsville",
+                            "state": "Province",
+                            "postalCode": "50000-000",
+                            "country": "Country",
+                            "_id": "64dfe6267bc2d9ba5c315754"
+                          }
+                        },
+                        "motive": "Lorem",
+                        "status": "Approved",
+                        "requestDate": "2023-08-18T21:47:00.881Z"
+                      },
+                      "analyst": "64dfe75d7bc2d9ba5c315780",
+                      "firmLevelClaimScore": 0,
+                      "firmLevelExecutionalScore": 0,
+                      "ascore": 0,
+                      "status": "Assigned",
+                      "createdAt": "2023-08-18T21:50:24.770Z",
+                      "analysisDate": "2023-08-18T21:50:24.770Z"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching analyzes"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": []
       }
     },
     "/api/v1/analyzes/{id}/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Public route",
+        "description": "Shows information about one analysis determined by ID.",
         "parameters": [
           {
             "name": "id",
@@ -66,18 +122,75 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "analysis": {
+                    "_id": "64dfe7a07bc2d9ba5c315790",
+                    "request": {
+                      "_id": "64dfe6d47bc2d9ba5c315769",
+                      "customer": "64dfe6317bc2d9ba5c31575b",
+                      "company": {
+                        "_id": "64dfe6267bc2d9ba5c315753",
+                        "name": "XYZ Enterprises",
+                        "industry": "Finance",
+                        "cnpj": "00.705.432/0001-02",
+                        "score": 0,
+                        "headquartersLocation": {
+                          "street": "456 Elm Avenue",
+                          "city": "Townsville",
+                          "state": "Province",
+                          "postalCode": "50000-000",
+                          "country": "Country",
+                          "_id": "64dfe6267bc2d9ba5c315754"
+                        }
+                      },
+                      "motive": "Lorem",
+                      "status": "Approved",
+                      "requestDate": "2023-08-18T21:47:00.881Z"
+                    },
+                    "analyst": "64dfe75d7bc2d9ba5c315780",
+                    "firmLevelClaimScore": 0,
+                    "firmLevelExecutionalScore": 0,
+                    "ascore": 0,
+                    "status": "Assigned",
+                    "createdAt": "2023-08-18T21:50:24.770Z",
+                    "analysisDate": "2023-08-18T21:50:24.770Z"
+                  }
+                }
+              }
+            }
           },
           "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis not found"
+                }
+              }
+            },
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the analysis"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": []
       },
       "patch": {
-        "description": "",
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Private route for analysts",
+        "description": "Updates information about one analysis determined by ID. Requires the analyst logged in to be the one in charge of the analysis.",
         "parameters": [
           {
             "name": "id",
@@ -97,41 +210,95 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis updated successfully"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update an analysis, at least one field (firmLevelClaimScore, firmLevelExecutionalScore, status) must be provided"
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis not found"
+                }
+              }
+            },
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the analysis"
+                }
+              }
+            }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "analysis": {
-                    "example": "any"
-                  }
-                }
+                "$ref": "#/components/schemas/analysis"
               }
             }
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Private route for analysts",
+        "description": "Deletes one analysis determined by ID. Requires the analyst logged in to be the one in charge of the analysis.",
         "parameters": [
           {
             "name": "id",
@@ -151,21 +318,68 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis deleted successfully"
+                }
+              }
+            }
           },
           "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
             "description": "Unauthorized"
           },
           "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
             "description": "Forbidden"
           },
           "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis not found"
+                }
+              }
+            },
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the analysis"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/v1/requests/": {
@@ -860,7 +1074,7 @@
           "Companies"
         ],
         "summary": "Public route",
-        "description": "List all companies.",
+        "description": "Shows information about one company determined by ID.",
         "parameters": [
           {
             "name": "id",
@@ -2935,10 +3149,38 @@
         "properties": {
           "status": {
             "type": "string",
-            "example": "Reproved"
+            "enum": [
+              "Approved",
+              "Reproved"
+            ]
           }
         },
         "required": [
+          "status"
+        ]
+      },
+      "analysis": {
+        "type": "object",
+        "properties": {
+          "firmLevelClaimScore": {
+            "type": "number",
+            "example": 8
+          },
+          "firmLevelExecutionalScore": {
+            "type": "number",
+            "example": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "In Progress",
+              "Completed"
+            ]
+          }
+        },
+        "required": [
+          "firmLevelClaimScore",
+          "firmLevelExecutionalScore",
           "status"
         ]
       }

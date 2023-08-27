@@ -92,7 +92,22 @@ const doc = {
         $motive: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
       },
       analysisRequestStatus: {
-        $status: "Reproved"
+        $status: {
+          '@enum': [
+            "Approved",
+            "Reproved"
+          ]
+        }
+      },
+      analysis: {
+        $firmLevelClaimScore: 8,
+        $firmLevelExecutionalScore: 10,
+        $status: {
+          '@enum': [
+            "In Progress",
+            "Completed"
+          ]
+        }
       }
     },
   }

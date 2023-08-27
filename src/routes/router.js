@@ -7,7 +7,47 @@ const analysisRoutes = require('./analysisRoutes')
 const adminRoutes = require('./adminRoutes')
 const authRoutes = require('./authRoutes')
 
-router.use('/analyzes', analysisRoutes)
+router.use('/analyzes', analysisRoutes
+/*
+  #swagger.tags = ['Analyzes']
+  #swagger.security = [{
+    "bearerAuth": []
+  }]
+  #swagger.responses[401] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "Unauthorized access"
+        }
+      }           
+    }
+  }
+  #swagger.responses[403] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          responsePossibilities: [
+            { message: "You do not have sufficient privileges to access this route" },
+            { message: "You do not have the necessary permissions to access this route" }
+          ]        
+        }
+      }           
+    }
+  }
+  #swagger.responses[404] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "Analysis not found"
+        }
+      }           
+    }
+  }
+*/
+)
 router.use('/requests', analysisRequestRoutes
 /*
   #swagger.tags = ['Analysis Requests']

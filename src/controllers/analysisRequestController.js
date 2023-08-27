@@ -3,6 +3,7 @@ const { Customer } = require('../models/Customer')
 const { Company } = require('../models/Company')
 const { Analyst } = require('../models/Analyst') 
 const { Analysis } = require('../models/Analysis') 
+const { paginate } = require('../utils/pagination')
 
 // Private route for customers
 const createAnalysisRequest = async (req, res) => {
@@ -119,6 +120,7 @@ const getAllAnalysisRequests = async (req, res) => {
       content: {
         "application/json": {
           example: {
+            totalPages: 1,
             analysisRequests: [
               {
                 "_id": "64dfe622c212d95c33215769",
@@ -189,18 +191,25 @@ const getAllAnalysisRequests = async (req, res) => {
   */
   try {
     const user = req.user
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+
     let analysisRequests = await AnalysisRequest.find()
       .populate('company', '_id name industry cnpj headquartersLocation')
       .populate('customer', '_id user name cpf')
       .select({__v:0})
-
+    
     if(user.customerID){
       analysisRequests = requests.filter((analysisRequest) => {
         return analysisRequest.customer._id.toString() === user.customerID
       })
     }
-      
-    res.status(200).json({analysisRequests})
+    
+    const data = paginate(page, limit, analysisRequests)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      analysisRequests: data.paginatedItems
+    })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching analysis requests' })
   }

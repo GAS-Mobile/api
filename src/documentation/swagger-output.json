@@ -45,12 +45,29 @@
         ],
         "summary": "Public route",
         "description": "List all analyzes.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "example": {
+                  "totalPages": 1,
                   "analyzes": [
                     {
                       "_id": "64dfe7a07bc2d9ba5c315790",
@@ -396,6 +413,20 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -404,6 +435,7 @@
             "content": {
               "application/json": {
                 "example": {
+                  "totalPages": 1,
                   "analysisRequests": [
                     {
                       "_id": "64dfe622c212d95c33215769",
@@ -923,12 +955,29 @@
         ],
         "summary": "Public route",
         "description": "List all companies.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "example": {
+                  "totalPages": 1,
                   "companies": [
                     {
                       "name": "XYZ Enterprises",
@@ -1337,6 +1386,20 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1345,6 +1408,7 @@
             "content": {
               "application/json": {
                 "example": {
+                  "totalPages": 1,
                   "customers": [
                     {
                       "_id": "64e681dafsd11f2d381231b9",
@@ -1801,6 +1865,20 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1809,6 +1887,7 @@
             "content": {
               "application/json": {
                 "example": {
+                  "totalPages": 1,
                   "analysts": [
                     {
                       "_id": "64e681dafsd11f2d381231b9",
@@ -2298,6 +2377,20 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2306,6 +2399,7 @@
             "content": {
               "application/json": {
                 "example": {
+                  "totalPages": 1,
                   "admins": [
                     {
                       "_id": "64e681dafsd11f2d381231b9",

@@ -1,5 +1,6 @@
 const { User } = require('../models/User')
 const { Admin } = require('../models/Admin')
+const { paginate } = require('../utils/pagination')
 
 // Private route for admins
 const createAdmin = async (req, res) => {
@@ -77,6 +78,7 @@ const getAllAdmins = async (req, res) => {
       content: {
         "application/json": {
           example: {
+            totalPages: 1,
             admins: [
               {
                 "_id": "64e681dafsd11f2d381231b9",
@@ -108,12 +110,18 @@ const getAllAdmins = async (req, res) => {
     }
   */
   try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+
     const admins = await Admin.find()
       .populate('user', 'email _id')
       .select({__v: 0})
-      
-    res.status(200).json({admins})
 
+    const data = paginate(page, limit, admins)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      admins: data.paginatedItems
+    })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching admins' })
   }

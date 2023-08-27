@@ -7,7 +7,7 @@ const { Admin } = require('../models/Admin')
 const { Analyst } = require('../models/Analyst')
 const { Customer } = require('../models/Customer')
 const { ActiveRefreshToken } = require('../models/ActiveRefreshToken')
-const { generateAccessToken, generateRefreshToken } = require('../utils/utils')
+const { generateAccessToken, generateRefreshToken } = require('../utils/auth')
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 

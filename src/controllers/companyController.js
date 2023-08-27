@@ -1,4 +1,5 @@
 const { Company } = require('../models/Company')
+const { paginate } = require('../utils/pagination')
 
 // Public route
 const getAllCompanies = async (req, res) => {
@@ -10,6 +11,7 @@ const getAllCompanies = async (req, res) => {
       content: {
         "application/json": {
           example: {
+            totalPages: 1,
             companies: [
               {
                 name: "XYZ Enterprises",
@@ -51,11 +53,17 @@ const getAllCompanies = async (req, res) => {
     }
   */
   try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+
     const companies = await Company.find()
       .select({__v: 0, 'headquartersLocation._id': 0})
       
-    res.status(200).json({companies})
-
+    const data = paginate(page, limit, companies)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      companies: data.paginatedItems
+    })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching companies' })
   }

@@ -9,7 +9,6 @@ const { paginate } = require('../utils/pagination')
 const createAnalysisRequest = async (req, res) => {
   /*
     #swagger.summary = "Private route for customers"
-    #swagger.security = []
     #swagger.description = "Creates a new analysis request."
     #swagger.requestBody = {
       required: true,

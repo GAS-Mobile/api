@@ -196,6 +196,7 @@ const getAllAnalysisRequests = async (req, res) => {
     let analysisRequests = await AnalysisRequest.find()
       .populate('company', '_id name industry cnpj headquartersLocation')
       .populate('customer', '_id user name cpf')
+      .sort({requestDate: -1})
       .select({__v:0})
       
     if(user.customerID){

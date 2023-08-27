@@ -73,6 +73,7 @@ const getAllAnalyzes = async (req, res) => {
         },
         select: '-__v'
       })
+      .sort({analysisDate: -1})
       .select({__v:0})
       
     const data = paginate(page, limit, analyzes)

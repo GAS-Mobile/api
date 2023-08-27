@@ -1,6 +1,7 @@
 const { User } = require('../models/User')
 const { Customer } = require('../models/Customer')
 const { Analyst } = require('../models/Analyst')
+const { paginate } = require('../utils/pagination')
 
 // Private route for admins
 const getAllCustomers = async (req, res) => {
@@ -11,6 +12,7 @@ const getAllCustomers = async (req, res) => {
       content: {
         "application/json": {
           example: {
+            totalPages: 1,
             customers: [
               {
                 "_id": "64e681dafsd11f2d381231b9",
@@ -46,12 +48,18 @@ const getAllCustomers = async (req, res) => {
     }
   */
   try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+    
     const customers = await Customer.find()
       .populate('user', 'email _id')
       .select({__v: 0})
-      
-    res.status(200).json({customers})
 
+    const data = paginate(page, limit, customers)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      customers: data.paginatedItems
+    })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching customers' })
   }

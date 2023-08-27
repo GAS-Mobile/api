@@ -34,6 +34,10 @@ const doc = {
       name: 'Companies',
       description: 'Endpoints for handling companies and their data'
     },
+    {
+      name: 'Analysis Requests',
+      description: 'Endpoints for handling analysis requests and their data'
+    },
   ],
   components: {
     securitySchemes:{
@@ -81,6 +85,14 @@ const doc = {
           $postalCode: "50000-000",
           $country: "Country"
         }
+      },
+      analysisRequest: {
+        $customerID: "64dfeddasdbc2d9ba5c3575b",
+        $companyID: "64dfeddc2d9b92902mc3575b",
+        $motive: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+      },
+      analysisRequestStatus: {
+        $status: "Reproved"
       }
     },
   }

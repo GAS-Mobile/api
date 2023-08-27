@@ -140,7 +140,7 @@ const createCompany = async (req, res) => {
 const getCompanyByID = async (req, res) => {
   /*
     #swagger.summary = "Public route"
-    #swagger.description = "List all companies."
+    #swagger.description = "Shows information about one company determined by ID."
     #swagger.security = []
     #swagger.responses[200] = {
       content: {

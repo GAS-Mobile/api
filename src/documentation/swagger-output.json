@@ -1022,6 +1022,87 @@
         "security": []
       }
     },
+    "/api/v1/companies/search": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Public route",
+        "description": "Search companies by name and CNPJ.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "companies": [
+                    {
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "00.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country"
+                      }
+                    },
+                    {
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "12.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while searching companies"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
     "/api/v1/companies/create/": {
       "post": {
         "tags": [

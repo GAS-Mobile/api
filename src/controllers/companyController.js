@@ -1,5 +1,6 @@
 const { Company } = require('../models/Company')
 const { paginate } = require('../utils/pagination')
+const { formatCNPJ } = require('../utils/formatters')
 
 // Public route
 const getAllCompanies = async (req, res) => {
@@ -335,9 +336,95 @@ const deleteCompanyByID = async (req, res) => {
   }
 }
 
+// Public route
+const searchCompanies = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "Search companies by name and CNPJ."
+    #swagger.security = []
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            totalPages: 1,
+            companies: [
+              {
+                name: "XYZ Enterprises",
+                industry: "Finance",
+                cnpj: "00.705.432/0001-02",
+                headquartersLocation: {
+                  street: "456 Elm Avenue",
+                  city: "Townsville",
+                  state: "Province",
+                  postalCode: "50000-000",
+                  country: "Country"
+                }
+              },
+              {
+                name: "XYZ Enterprises",
+                industry: "Finance",
+                cnpj: "12.705.432/0001-02",
+                headquartersLocation: {
+                  street: "456 Elm Avenue",
+                  city: "Townsville",
+                  state: "Province",
+                  postalCode: "50000-000",
+                  country: "Country"
+                }
+              },
+            ]
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while searching companies"
+          }
+        }           
+      }
+    }
+  */
+  try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+    const query = req.query.q
+    let companies = []
+    
+    const hasCharsInQuery = query && query.match(/\D/g) && query.match(/\D/g).length > 0
+    
+    if (query && hasCharsInQuery){
+      companies = await Company.find(
+        {name: { "$regex": query, "$options": "i" }
+      }).select({__v: 0, 'headquartersLocation._id': 0})
+    } 
+    else if (query && !hasCharsInQuery) {
+      companies = await Company.find({ $or: [
+        {name: { "$regex": query, "$options": "i" }},
+        {cnpj: { "$regex": "^" + formatCNPJ(query) }}
+      ]}).select({__v: 0, 'headquartersLocation._id': 0})
+    } 
+    else {
+      companies = await Company.find()
+        .select({__v: 0, 'headquartersLocation._id': 0})
+    }
+      
+    const data = paginate(page, limit, companies)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      companies: data.paginatedItems
+    })
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while searching companies' })
+  }
+}
+
 module.exports = {
   createCompany,
   getAllCompanies,
+  searchCompanies,
   getCompanyByID,
   updateCompanyByID,
   deleteCompanyByID,

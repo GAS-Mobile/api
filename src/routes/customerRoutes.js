@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const customerController = require('../controllers/customerController')
-const { authorize } = require('../utils/utils')
+const { authorize } = require('../utils/auth')
 
 router.get('/', authorize(['Admin']), customerController.getAllCustomers)
 router.post('/create/', customerController.createCustomer)

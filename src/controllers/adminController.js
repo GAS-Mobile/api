@@ -1,8 +1,49 @@
 const { User } = require('../models/User')
 const { Admin } = require('../models/Admin')
+const { paginate } = require('../utils/pagination')
 
 // Private route for admins
 const createAdmin = async (req, res) => {
+  /*
+    #swagger.description = "Creates a new admin."
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/admin"
+          }  
+        }
+      }
+    }
+    #swagger.responses[201] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Admin created successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To create an admin is necessary to send email and password"
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while creating the admin"
+          }
+        }           
+      }
+    }
+  */
   try {
     const data = req.body.admin
 
@@ -31,13 +72,56 @@ const createAdmin = async (req, res) => {
 
 // Private route for admins
 const getAllAdmins = async (req, res) => {
+  /*
+    #swagger.description = "List all admins."
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            totalPages: 1,
+            admins: [
+              {
+                "_id": "64e681dafsd11f2d381231b9",
+                "user": {
+                  "_id": "64e68e2lsdakc1d9jj7697dd",
+                  "email": "admin1@gmail.com"
+                }
+              },
+              {
+                "_id": "64e681252bddef2d381231b9",
+                "user": {
+                  "_id": "64e68e2lsdakc182fc7697dd",
+                  "email": "admin2@gmail.com"
+                }
+              }
+            ]
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching admins"
+          }
+        }           
+      }
+    }
+  */
   try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+
     const admins = await Admin.find()
       .populate('user', 'email _id')
       .select({__v: 0})
-      
-    res.status(200).json({admins})
 
+    const data = paginate(page, limit, admins)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      admins: data.paginatedItems
+    })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching admins' })
   }
@@ -45,6 +129,33 @@ const getAllAdmins = async (req, res) => {
 
 // Private route for admins
 const getAdminByID = async (req, res) => {
+  /*
+    #swagger.description = "Shows information about one admin determined by ID."
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            admin: {
+              "_id": "64e681dafsd11f2d381231b9",
+              "user": {
+                "_id": "64e68e2lsdakc1d9jj7697dd",
+                "email": "admin1@gmail.com"
+              }
+            }
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching the admin"
+          }
+        }           
+      }
+    }
+  */
   try {
     const adminID = req.params.id
 
@@ -62,12 +173,64 @@ const getAdminByID = async (req, res) => {
 
     res.status(200).json({admin})
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: "An error occurred while fetching the admin" })
   }
 }
 
 // Private route for admins
 const updateAdminByID = async (req, res) => {
+  /*
+    #swagger.description = "Update information about one admin determined by ID."
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/admin"
+          }  
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Admin updated successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To update an admin, at least one field (email, password) must be provided"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]
+          },
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while updating the admin"
+          }
+        }           
+      }
+    }
+  */
   try {
     const adminID = req.params.id
     const data = req.body.admin
@@ -113,6 +276,39 @@ const updateAdminByID = async (req, res) => {
 
 // Private route for admins
 const deleteAdminByID = async (req, res) => {
+  /*
+    #swagger.description = "Deletes one admin determined by ID."
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Admin deleted successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "You do not have sufficient privileges to access this route" },
+              { message: "You do not have the necessary permissions to access this route" }
+            ]
+          },
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while deleting the admin"
+          }
+        }           
+      }
+    }
+  */
   try {
     const adminID = req.params.id
     const user = req.user
@@ -135,7 +331,7 @@ const deleteAdminByID = async (req, res) => {
 
     res.status(200).json({ message: 'Admin deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: "An error occurred while deleting the admin" })
   }
 }
 

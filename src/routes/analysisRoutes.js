@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const analysisController = require('../controllers/analysisController')
-const { authorize } = require('../utils/utils')
+const { authorize } = require('../utils/auth')
 
 router.get('/', analysisController.getAllAnalyzes)
 router.get('/:id/', analysisController.getAnalysisByID)

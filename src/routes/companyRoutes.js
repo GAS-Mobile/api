@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const companyController = require('../controllers/companyController');
-const { authorize } = require('../utils/utils')
+const { authorize } = require('../utils/auth')
 
 router.get('/', companyController.getAllCompanies);
 router.post('/create/', authorize(['Admin']), companyController.createCompany);

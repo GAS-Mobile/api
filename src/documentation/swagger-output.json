@@ -1,0 +1,3283 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "GAS Mobile API Documentation",
+    "description": "Documentation for the GAS Mobile REST API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Endpoints for handling user authentication"
+    },
+    {
+      "name": "Admins",
+      "description": "Endpoints for handling admins and their data"
+    },
+    {
+      "name": "Analysts",
+      "description": "Endpoints for handling analysts and their data"
+    },
+    {
+      "name": "Customers",
+      "description": "Endpoints for handling customers and their data"
+    },
+    {
+      "name": "Companies",
+      "description": "Endpoints for handling companies and their data"
+    },
+    {
+      "name": "Analysis Requests",
+      "description": "Endpoints for handling analysis requests and their data"
+    }
+  ],
+  "paths": {
+    "/api/v1/analyzes/": {
+      "get": {
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Public route",
+        "description": "List all analyzes.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "analyzes": [
+                    {
+                      "_id": "64dfe7a07bc2d9ba5c315790",
+                      "request": {
+                        "_id": "64dfe6d47bc2d9ba5c315769",
+                        "customer": "64dfe6317bc2d9ba5c31575b",
+                        "company": {
+                          "_id": "64dfe6267bc2d9ba5c315753",
+                          "name": "XYZ Enterprises",
+                          "industry": "Finance",
+                          "cnpj": "00.705.432/0001-02",
+                          "score": 0,
+                          "headquartersLocation": {
+                            "street": "456 Elm Avenue",
+                            "city": "Townsville",
+                            "state": "Province",
+                            "postalCode": "50000-000",
+                            "country": "Country",
+                            "_id": "64dfe6267bc2d9ba5c315754"
+                          }
+                        },
+                        "motive": "Lorem",
+                        "status": "Approved",
+                        "requestDate": "2023-08-18T21:47:00.881Z"
+                      },
+                      "analyst": "64dfe75d7bc2d9ba5c315780",
+                      "firmLevelClaimScore": 0,
+                      "firmLevelExecutionalScore": 0,
+                      "ascore": 0,
+                      "status": "Assigned",
+                      "createdAt": "2023-08-18T21:50:24.770Z",
+                      "analysisDate": "2023-08-18T21:50:24.770Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching analyzes"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/analyzes/{id}/": {
+      "get": {
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Public route",
+        "description": "Shows information about one analysis determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "analysis": {
+                    "_id": "64dfe7a07bc2d9ba5c315790",
+                    "request": {
+                      "_id": "64dfe6d47bc2d9ba5c315769",
+                      "customer": "64dfe6317bc2d9ba5c31575b",
+                      "company": {
+                        "_id": "64dfe6267bc2d9ba5c315753",
+                        "name": "XYZ Enterprises",
+                        "industry": "Finance",
+                        "cnpj": "00.705.432/0001-02",
+                        "score": 0,
+                        "headquartersLocation": {
+                          "street": "456 Elm Avenue",
+                          "city": "Townsville",
+                          "state": "Province",
+                          "postalCode": "50000-000",
+                          "country": "Country",
+                          "_id": "64dfe6267bc2d9ba5c315754"
+                        }
+                      },
+                      "motive": "Lorem",
+                      "status": "Approved",
+                      "requestDate": "2023-08-18T21:47:00.881Z"
+                    },
+                    "analyst": "64dfe75d7bc2d9ba5c315780",
+                    "firmLevelClaimScore": 0,
+                    "firmLevelExecutionalScore": 0,
+                    "ascore": 0,
+                    "status": "Assigned",
+                    "createdAt": "2023-08-18T21:50:24.770Z",
+                    "analysisDate": "2023-08-18T21:50:24.770Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the analysis"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Private route for analysts",
+        "description": "Updates information about one analysis determined by ID. Requires the analyst logged in to be the one in charge of the analysis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update an analysis, at least one field (firmLevelClaimScore, firmLevelExecutionalScore, status) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the analysis"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/analysis"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Analyzes"
+        ],
+        "summary": "Private route for analysts",
+        "description": "Deletes one analysis determined by ID. Requires the analyst logged in to be the one in charge of the analysis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the analysis"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/requests/": {
+      "get": {
+        "tags": [
+          "Analysis Requests"
+        ],
+        "summary": "Private route for analysts and customers",
+        "description": "For analysts, lists all analysis requests. In customers case, only lists their analysis requests.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "analysisRequests": [
+                    {
+                      "_id": "64dfe622c212d95c33215769",
+                      "customer": {
+                        "_id": "64dfe17bc22222d9bc31575b",
+                        "user": "64d631722bc2d9ba5c315759",
+                        "name": "customer",
+                        "cpf": "000.000.000-00"
+                      },
+                      "company": {
+                        "_id": "64dfe6kklkc2d9ba5c315753",
+                        "name": "XYZ Enterprises",
+                        "industry": "Finance",
+                        "cnpj": "00.705.432/0001-02",
+                        "headquartersLocation": {
+                          "street": "456 Elm Avenue",
+                          "city": "Townsville",
+                          "state": "Province",
+                          "postalCode": "50000-000",
+                          "country": "Country",
+                          "_id": "64dfe62kjij2d9ba5c315754"
+                        }
+                      },
+                      "motive": "Lorem",
+                      "status": "Approved",
+                      "requestDate": "2023-08-18T21:47:00.881Z"
+                    },
+                    {
+                      "_id": "64dfe622c212d95c33215769",
+                      "customer": {
+                        "_id": "64dfe17bc22222d9bc31575b",
+                        "user": "64d631722bc2d9ba5c315759",
+                        "name": "customer",
+                        "cpf": "000.000.000-00"
+                      },
+                      "company": {
+                        "_id": "64dfe6kklkc2d9ba5c315753",
+                        "name": "XYZ Enterprises",
+                        "industry": "Finance",
+                        "cnpj": "00.705.432/0001-02",
+                        "headquartersLocation": {
+                          "street": "456 Elm Avenue",
+                          "city": "Townsville",
+                          "state": "Province",
+                          "postalCode": "50000-000",
+                          "country": "Country",
+                          "_id": "64dfe62kjij2d9ba5c315754"
+                        }
+                      },
+                      "motive": "Lorem",
+                      "status": "Approved",
+                      "requestDate": "2023-08-18T21:47:00.881Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching analysis requests"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/requests/create/": {
+      "post": {
+        "tags": [
+          "Analysis Requests"
+        ],
+        "summary": "Private route for customers",
+        "description": "Creates a new analysis request.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis requested successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create an analysis request is necessary to send customerID, companyID and motive"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Customer not found"
+                    },
+                    {
+                      "message": "Company not found"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while requesting the analysis"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/analysisRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests/{id}/": {
+      "get": {
+        "tags": [
+          "Analysis Requests"
+        ],
+        "summary": "Private route for analysts and customers",
+        "description": "Shows information about one analysis request determined by ID. In the customer case, even if the analysis request exists, it only shows the information if it is his.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "analysisRequest": {
+                    "_id": "64dfe622c212d95c33215769",
+                    "customer": {
+                      "_id": "64dfe17bc22222d9bc31575b",
+                      "user": "64d631722bc2d9ba5c315759",
+                      "name": "customer",
+                      "cpf": "000.000.000-00"
+                    },
+                    "company": {
+                      "_id": "64dfe6kklkc2d9ba5c315753",
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "00.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country",
+                        "_id": "64dfe62kjij2d9ba5c315754"
+                      }
+                    },
+                    "motive": "Lorem",
+                    "status": "Approved",
+                    "requestDate": "2023-08-18T21:47:00.881Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis request not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the analysis request"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Analysis Requests"
+        ],
+        "summary": "Private route for analysts",
+        "description": "Updates information about one analysis request determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Analysis request updated successfully"
+                    },
+                    {
+                      "message": "Analysis request updated and analysis created successfully"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Cannot update an analysis request that has already been analyzed"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis request not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the analysis request"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/analysisRequestStatus"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Analysis Requests"
+        ],
+        "summary": "Private route for analysts and customers",
+        "description": "Deletes one analysis request determined by ID. In the customer case, even if the analysis request exists, he can only delete if it is his.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis request deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analysis request not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the analysis request"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/companies/": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Public route",
+        "description": "List all companies.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "companies": [
+                    {
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "00.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country"
+                      }
+                    },
+                    {
+                      "name": "XYZ Enterprises",
+                      "industry": "Finance",
+                      "cnpj": "12.705.432/0001-02",
+                      "headquartersLocation": {
+                        "street": "456 Elm Avenue",
+                        "city": "Townsville",
+                        "state": "Province",
+                        "postalCode": "50000-000",
+                        "country": "Country"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching companies"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/companies/create/": {
+      "post": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Private route for admins",
+        "description": "Creates a new company.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create a company is necessary to send name, industry, CNPJ and headquartersLocation."
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "CNPJ is already in use by another company"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the company"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "ref": "#/components/schemas/company"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{id}/": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Public route",
+        "description": "Shows information about one company determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "company": {
+                    "name": "XYZ Enterprises",
+                    "industry": "Finance",
+                    "cnpj": "00.705.432/0001-02",
+                    "headquartersLocation": {
+                      "street": "456 Elm Avenue",
+                      "city": "Townsville",
+                      "state": "Province",
+                      "postalCode": "50000-000",
+                      "country": "Country"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the company"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Private route for admins",
+        "description": "Updates information about one company determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update a company, at least one field (name, industry, CNPJ, headquartersLocation) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "CNPJ is already in use by another company"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the company"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/company"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Private route for admins",
+        "description": "Deletes one company determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Company not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the company"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for admins",
+        "description": "List all customers.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "customers": [
+                    {
+                      "_id": "64e681dafsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc1d9jj7697dd",
+                        "email": "customer@gmail.com"
+                      },
+                      "name": "customer",
+                      "cpf": "000.000.000-00"
+                    },
+                    {
+                      "_id": "64e60000fsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsda099d9jj7697dd",
+                        "email": "customer2@gmail.com"
+                      },
+                      "name": "customer",
+                      "cpf": "001.000.000-00"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching customers"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/customers/create/": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Public route",
+        "description": "Creates a new customer.",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create a customer is necessary to send email, password, name and CPF"
+                }
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Email is already in use by another user"
+                    },
+                    {
+                      "message": "CPF is already in use by another user"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/customers/{id}/": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for the customer with the specified ID",
+        "description": "Shows information about one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "customer": {
+                    "_id": "64e681dafsd11f2d381231b9",
+                    "user": {
+                      "_id": "64e68e2lsdakc1d9jj7697dd",
+                      "email": "customer@gmail.com"
+                    },
+                    "name": "customer",
+                    "cpf": "000.000.000-00"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for the customer with the specified ID",
+        "description": "Updates information about one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update a customer, at least one field (email, password, name, cpf) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Email is already in use by another user"
+                    },
+                    {
+                      "message": "CPF is already in use by another user"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customer"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Private route for the customer with the specified ID",
+        "description": "Deletes one customer determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Customer not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the customer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/analysts/": {
+      "get": {
+        "tags": [
+          "Analysts"
+        ],
+        "summary": "Private route for admins",
+        "description": "List all analysts.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "analysts": [
+                    {
+                      "_id": "64e681dafsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc1d9jj7697dd",
+                        "email": "analyst@gmail.com"
+                      },
+                      "name": "analyst",
+                      "cpf": "000.000.000-00"
+                    },
+                    {
+                      "_id": "64e60000fsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsda099d9jj7697dd",
+                        "email": "analyst2@gmail.com"
+                      },
+                      "name": "analyst",
+                      "cpf": "001.000.000-00"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching analysts"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/analysts/create/": {
+      "post": {
+        "tags": [
+          "Analysts"
+        ],
+        "summary": "Private route for admins",
+        "description": "Creates a new analyst.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analyst created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create an analyst is necessary to send email, password, name and CPF"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Email is already in use by another user"
+                    },
+                    {
+                      "message": "CPF is already in use by another user"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the analyst"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/analyst"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analysts/{id}/": {
+      "get": {
+        "tags": [
+          "Analysts"
+        ],
+        "summary": "Private route for admins and the analyst with the specified ID",
+        "description": "Shows information about one analyst determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "analyst": {
+                    "_id": "64e681dafsd11f2d381231b9",
+                    "user": {
+                      "_id": "64e68e2lsdakc1d9jj7697dd",
+                      "email": "analyst@gmail.com"
+                    },
+                    "name": "analyst",
+                    "cpf": "000.000.000-00"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analyst not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the analyst"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Analysts"
+        ],
+        "summary": "Private route for admins and the analyst with the specified ID",
+        "description": "Updates information about one analyst determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analyst updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update an analyst, at least one field (email, password, name, cpf) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analyst not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "Email is already in use by another user"
+                    },
+                    {
+                      "message": "CPF is already in use by another user"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the analyst"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/analyst"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Analysts"
+        ],
+        "summary": "Private route for admins and the analyst with the specified ID",
+        "description": "Deletes one analyst determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analyst deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Analyst not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the analyst"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admins/": {
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "List all admins.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "totalPages": 1,
+                  "admins": [
+                    {
+                      "_id": "64e681dafsd11f2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc1d9jj7697dd",
+                        "email": "admin1@gmail.com"
+                      }
+                    },
+                    {
+                      "_id": "64e681252bddef2d381231b9",
+                      "user": {
+                        "_id": "64e68e2lsdakc182fc7697dd",
+                        "email": "admin2@gmail.com"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching admins"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admins/create/": {
+      "post": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Creates a new admin.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To create an admin is necessary to send email and password"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email is already in use by another user"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while creating the admin"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/admin"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admins/{id}/": {
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Shows information about one admin determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "admin": {
+                    "_id": "64e681dafsd11f2d381231b9",
+                    "user": {
+                      "_id": "64e68e2lsdakc1d9jj7697dd",
+                      "email": "admin1@gmail.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while fetching the admin"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Update information about one admin determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To update an admin, at least one field (email, password) must be provided"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email is already in use by another user"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while updating the admin"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/admin"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Private route for admins",
+        "description": "Deletes one admin determined by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin deleted successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "You do not have sufficient privileges to access this route"
+                    },
+                    {
+                      "message": "You do not have the necessary permissions to access this route"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Admin not found"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while deleting the admin"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/login/": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Public route",
+        "description": "Receives an user object with email and password and, if the credentials are correct, sends a pair of tokens.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "To login is necessary to send email and password"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "No active account found with the given credentials"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred during login"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout/": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Private route for logged in users",
+        "description": "Deletes the refresh token for the authenticated user",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Logged out successfully"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unauthorized access"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "You do not have sufficient privileges to access this route"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred during logout"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/refresh-tokens/": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Public route",
+        "description": "Receives a refresh token and, if the token is valid, sends a new pair of tokens",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokens"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Please provide a valid refresh token"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "The provided refresh token is invalid or expired"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "An error occurred while refreshing tokens"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/refreshToken"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "user": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "tokens": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbOi12dIU6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJRCI6IjY0ZGYyZTE2MjVmYjQwMDllMmUwZjfasdfwZjc5ZSJ9gsIdDASdV4cCI6MTY5NjIzOH0.32314EPF_kcutZhfQL3HQkKVuudPg"
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbOi12dIU6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJRCI6IjY0ZGYyZTE2MjVmYjQwMDllMmUwZjfasdfwZjc5ZSJ9gsIdDASdV4cCI6MTY5NjIzOH0.32314EPF_kcutZhfQL3HQkKVuudPg"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ]
+      },
+      "refreshToken": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "example": "eyJhbOi12dIU6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJRCI6IjY0ZGYyZTE2MjVmYjQwMDllMmUwZjfasdfwZjc5ZSJ9gsIdDASdV4cCI6MTY5NjIzOH0.32314EPF_kcutZhfQL3HQkKVuudPg"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "admin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "analyst": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "analyst"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "000.000.000-00"
+          },
+          "email": {
+            "type": "string",
+            "example": "analyst@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "name",
+          "cpf",
+          "email",
+          "password"
+        ]
+      },
+      "customer": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "customer"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "000.000.000-00"
+          },
+          "email": {
+            "type": "string",
+            "example": "customer@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "name",
+          "cpf",
+          "email",
+          "password"
+        ]
+      },
+      "company": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "XYZ Enterprises"
+          },
+          "industry": {
+            "type": "string",
+            "example": "Finance"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "00.705.432/0001-02"
+          },
+          "headquartersLocation": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string",
+                "example": "456 Elm Avenue"
+              },
+              "city": {
+                "type": "string",
+                "example": "Townsville"
+              },
+              "state": {
+                "type": "string",
+                "example": "Province"
+              },
+              "postalCode": {
+                "type": "string",
+                "example": "50000-000"
+              },
+              "country": {
+                "type": "string",
+                "example": "Country"
+              }
+            },
+            "required": [
+              "street",
+              "city",
+              "state",
+              "postalCode",
+              "country"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "industry",
+          "cnpj",
+          "headquartersLocation"
+        ]
+      },
+      "analysisRequest": {
+        "type": "object",
+        "properties": {
+          "customerID": {
+            "type": "string",
+            "example": "64dfeddasdbc2d9ba5c3575b"
+          },
+          "companyID": {
+            "type": "string",
+            "example": "64dfeddc2d9b92902mc3575b"
+          },
+          "motive": {
+            "type": "string",
+            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+          }
+        },
+        "required": [
+          "customerID",
+          "companyID",
+          "motive"
+        ]
+      },
+      "analysisRequestStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "Approved",
+              "Reproved"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "analysis": {
+        "type": "object",
+        "properties": {
+          "firmLevelClaimScore": {
+            "type": "number",
+            "example": 8
+          },
+          "firmLevelExecutionalScore": {
+            "type": "number",
+            "example": 10
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "In Progress",
+              "Completed"
+            ]
+          }
+        },
+        "required": [
+          "firmLevelClaimScore",
+          "firmLevelExecutionalScore",
+          "status"
+        ]
+      }
+    }
+  }
+}

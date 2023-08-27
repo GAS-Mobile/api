@@ -7,11 +7,62 @@ const { Admin } = require('../models/Admin')
 const { Analyst } = require('../models/Analyst')
 const { Customer } = require('../models/Customer')
 const { ActiveRefreshToken } = require('../models/ActiveRefreshToken')
-const { generateAccessToken, generateRefreshToken } = require('../utils/utils')
+const { generateAccessToken, generateRefreshToken } = require('../utils/auth')
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 const login = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "Receives an user object with email and password and, if the credentials are correct, sends a pair of tokens."
+
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/user"
+          }  
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          schema:{
+            $ref: "#/components/schemas/tokens"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "To login is necessary to send email and password"
+          }
+        }           
+      }
+    }
+    #swagger.responses[401] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "No active account found with the given credentials"
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred during login"
+          }
+        }           
+      }
+    }
+  */
   try {
     const data = req.body.user
 
@@ -86,6 +137,51 @@ const login = async (req, res) => {
 }
 
 const logout = async (req, res) => {
+  /*
+    #swagger.summary = "Private route for logged in users"
+    #swagger.description = "Deletes the refresh token for the authenticated user"
+
+    #swagger.security = [{
+      "bearerAuth": []
+    }]
+
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Logged out successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[401] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Unauthorized access"
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "You do not have sufficient privileges to access this route"
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred during logout"
+          }
+        }           
+      }
+    }
+  */
   try {
     const userID = req.user.userID
     await ActiveRefreshToken.findOneAndDelete({ user: userID })
@@ -97,6 +193,56 @@ const logout = async (req, res) => {
 }
 
 const refreshTokens = (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "Receives a refresh token and, if the token is valid, sends a new pair of tokens"
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema:{
+            $ref: "#/components/schemas/refreshToken"
+          } 
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          schema:{
+            $ref: "#/components/schemas/tokens"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Please provide a valid refresh token"
+          }
+        }           
+      }
+    }
+    #swagger.responses[401] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "The provided refresh token is invalid or expired"
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while refreshing tokens"
+          }
+        }           
+      }
+    }
+  */
   try {
     const refreshTokenProvided = req.body.refreshToken
   

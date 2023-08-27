@@ -38,6 +38,10 @@ const doc = {
       name: 'Analysis Requests',
       description: 'Endpoints for handling analysis requests and their data'
     },
+    {
+      name: 'Analyzes',
+      description: 'Endpoints for handling analyzes and their data'
+    },
   ],
   components: {
     securitySchemes:{

@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const authController = require('../controllers/authController')
-const { authorize } = require('../utils/utils')
+const { authorize } = require('../utils/auth')
 
 router.post('/login/', authController.login)
 router.post('/logout/', authorize(['Admin', 'Analyst', 'Customer']), authController.logout)

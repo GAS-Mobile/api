@@ -342,6 +342,12 @@ const searchCompanies = async (req, res) => {
     #swagger.summary = "Public route"
     #swagger.description = "Search companies by name and CNPJ."
     #swagger.security = []
+    #swagger.parameters['sort'] = {
+      "in": "query",
+      "schema": {
+        '@enum': ['asc', 'desc']
+      } 
+    }
     #swagger.responses[200] = {
       content: {
         "application/json": {
@@ -391,6 +397,7 @@ const searchCompanies = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 20
     const query = req.query.q
+    const sort = req.query.sort
     let companies = []
     
     const hasCharsInQuery = query && query.match(/\D/g) && query.match(/\D/g).length > 0
@@ -409,6 +416,16 @@ const searchCompanies = async (req, res) => {
     else {
       companies = await Company.find()
         .select({__v: 0, 'headquartersLocation._id': 0})
+    }
+
+    if (sort && (sort === 'asc' || sort === 'desc')) {
+      companies = companies.sort((firstCompany, secondCompany) => {
+        if (sort === 'asc') {
+          return firstCompany.score - secondCompany.score;
+        } else {
+          return secondCompany.score - firstCompany.score;
+        }
+      });
     }
       
     const data = paginate(page, limit, companies)

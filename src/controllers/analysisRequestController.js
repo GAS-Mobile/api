@@ -198,9 +198,9 @@ const getAllAnalysisRequests = async (req, res) => {
       .populate('company', '_id name industry cnpj headquartersLocation')
       .populate('customer', '_id user name cpf')
       .select({__v:0})
-    
+      
     if(user.customerID){
-      analysisRequests = requests.filter((analysisRequest) => {
+      analysisRequests = analysisRequests.filter((analysisRequest) => {
         return analysisRequest.customer._id.toString() === user.customerID
       })
     }

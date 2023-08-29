@@ -117,9 +117,9 @@ const createAnalysisRequest = async (req, res) => {
       {status: 'In analysis'}
     ]})
     if (alreadyExistsAnalysisRequestUnderAnalysis){
-      res.status(409).json({message: 'A similar analysis request for this customer and company is already under analysis'})
+      return res.status(409).json({message: 'A similar analysis request for this customer and company is already under analysis'})
     }
-
+    
     const analysisRequestApproved = await AnalysisRequest.findOne({$and: [
       {customer: data.customerID},
       {company: data.companyID},
@@ -128,10 +128,10 @@ const createAnalysisRequest = async (req, res) => {
     if (analysisRequestApproved){
       const alreadyExistsAnalysisNotCompleted = await Analysis.exists({$and: [
         {request: analysisRequestApproved._id},
-        {status: {$not: 'Completed'}}
+        {status: {$ne: 'Completed'}}
       ]})
       if (alreadyExistsAnalysisNotCompleted){
-        res.status(409).json({
+        return res.status(409).json({
           message: "There's an ongoing analysis for the approved request from this customer and company that has not been completed yet"
         })
       }

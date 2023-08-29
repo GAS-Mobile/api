@@ -8,5 +8,6 @@ router.post('/create/', authorize(['Admin']), companyController.createCompany);
 router.get('/:id/', companyController.getCompanyByID);
 router.put('/:id/', authorize(['Admin']), companyController.updateCompanyByID);
 router.delete('/:id/', authorize(['Admin']), companyController.deleteCompanyByID);
+router.get('/:id/analyzes', companyController.getCompanyAnalyzes);
 
 module.exports = router;

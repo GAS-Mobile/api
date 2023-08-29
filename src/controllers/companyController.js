@@ -1,4 +1,6 @@
 const { Company } = require('../models/Company')
+const { AnalysisRequest } = require('../models/AnalysisRequest')
+const { Analysis } = require('../models/Analysis')
 const { paginate } = require('../utils/pagination')
 const { formatCNPJ } = require('../utils/formatters')
 
@@ -438,6 +440,67 @@ const searchCompanies = async (req, res) => {
   }
 }
 
+// Public route
+const getCompanyAnalyzes = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "List all analyzes for one company determined by ID."
+    #swagger.security = []
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            totalPages: 1,
+            analyzes: []
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching the analyzes"
+          }
+        }           
+      }
+    }
+  */
+  try {
+    const companyID = req.params.id
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+
+    if (!companyID || companyID.length !== 24) {
+      return res.status(404).json({ message: 'Company not found' })
+    }
+
+    const company = await Company.findById(companyID)
+      .select({__v: 0, 'headquartersLocation._id': 0})
+
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' })
+    }
+
+    const analysisRequestsForThisCompany = await AnalysisRequest.find({$and: [
+      {company: companyID},
+      {status: 'Approved'}
+    ]})
+
+    const analyzesOfThisCompany = analysisRequestsForThisCompany.filter(async analysisRequest => {
+      return await Analysis.findOne({ request: analysisRequest._id })
+    })
+
+    const data = paginate(page, limit, analyzesOfThisCompany)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      analyzes: data.paginatedItems
+    })
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while fetching the analyzes' })
+  }
+}
+
 module.exports = {
   createCompany,
   getAllCompanies,
@@ -445,4 +508,5 @@ module.exports = {
   getCompanyByID,
   updateCompanyByID,
   deleteCompanyByID,
+  getCompanyAnalyzes,
 }

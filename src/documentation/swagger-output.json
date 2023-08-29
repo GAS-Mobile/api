@@ -215,7 +215,7 @@
           "Analyzes"
         ],
         "summary": "Private route for analysts",
-        "description": "Updates information about one analysis determined by ID. \r   Requires the analyst logged in to be the one in charge of the analysis.\r   If any of the scores of the analysis is updated, the score of the company analyzed will also be updated.",
+        "description": "Updates information about one analysis determined by ID.    Requires the analyst logged in to be the one in charge of the analysis.   If any of the scores of the analysis is updated, the score of the company analyzed will also be updated.",
         "parameters": [
           {
             "name": "id",
@@ -1532,7 +1532,19 @@
               "application/json": {
                 "example": {
                   "totalPages": 1,
-                  "analyzes": []
+                  "analyzes": [
+                    {
+                      "_id": "64ebd211ae86d702181212db",
+                      "request": "64ebce672927dsfadfe659b2",
+                      "analyst": "64ebd1ee826d7bbb1821e96a",
+                      "firmLevelClaimScore": 2,
+                      "firmLevelExecutionalScore": 10,
+                      "ascore": 6,
+                      "status": "Completed",
+                      "createdAt": "2023-08-27T22:45:37.231Z",
+                      "analysisDate": "2023-08-27T22:47:39.311Z"
+                    }
+                  ]
                 }
               }
             }

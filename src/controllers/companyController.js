@@ -451,7 +451,19 @@ const getCompanyAnalyzes = async (req, res) => {
         "application/json": {
           example: {
             totalPages: 1,
-            analyzes: []
+            analyzes: [
+              {
+                "_id": "64ebd211ae86d702181212db",
+                "request": "64ebce672927dsfadfe659b2",
+                "analyst": "64ebd1ee826d7bbb1821e96a",
+                "firmLevelClaimScore": 2,
+                "firmLevelExecutionalScore": 10,
+                "ascore": 6,
+                "status": "Completed",
+                "createdAt": "2023-08-27T22:45:37.231Z",
+                "analysisDate": "2023-08-27T22:47:39.311Z"
+              }
+            ]
           }
         }
       }           
@@ -487,9 +499,12 @@ const getCompanyAnalyzes = async (req, res) => {
       {status: 'Approved'}
     ]})
 
-    const analyzesOfThisCompany = analysisRequestsForThisCompany.filter(async analysisRequest => {
-      return await Analysis.findOne({ request: analysisRequest._id })
-    })
+    const analyzesOfThisCompany = []
+    for(let analysisRequest of analysisRequestsForThisCompany){
+      let analysis = await Analysis.findOne({ request: analysisRequest._id })
+        .select('-__v')
+      analyzesOfThisCompany.push(analysis)
+    }
 
     const data = paginate(page, limit, analyzesOfThisCompany)
     res.status(200).json({

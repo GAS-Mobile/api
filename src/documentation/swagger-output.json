@@ -621,6 +621,24 @@
             },
             "description": "Not Found"
           },
+          "409": {
+            "description": "Conflict",
+            "ifStatusPresent": true,
+            "content": {
+              "application/json": {
+                "example": {
+                  "responsePossibilities": [
+                    {
+                      "message": "A similar analysis request for this customer and company is already under analysis"
+                    },
+                    {
+                      "message": "There's an ongoing analysis for the approved request from this customer and company that has not been completed yet"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {

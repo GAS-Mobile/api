@@ -64,6 +64,19 @@ const createAnalysisRequest = async (req, res) => {
         }           
       }
     }
+    #swagger.responses[409] = {
+      ifStatusPresent: true,
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "A similar analysis request for this customer and company is already under analysis" },
+              { message: "There's an ongoing analysis for the approved request from this customer and company that has not been completed yet" }
+            ]
+          }
+        }           
+      }
+    }
     #swagger.responses[500] = {
       content: {
         "application/json": {
@@ -96,6 +109,32 @@ const createAnalysisRequest = async (req, res) => {
     const companyExists = await Company.exists({_id: data.companyID})
     if(!companyExists){
       return res.status(404).json({ message: 'Company not found' })
+    }
+
+    const alreadyExistsAnalysisRequestUnderAnalysis = await AnalysisRequest.exists({$and: [
+      {customer: data.customerID},
+      {company: data.companyID},
+      {status: 'In analysis'}
+    ]})
+    if (alreadyExistsAnalysisRequestUnderAnalysis){
+      res.status(409).json({message: 'A similar analysis request for this customer and company is already under analysis'})
+    }
+
+    const analysisRequestApproved = await AnalysisRequest.findOne({$and: [
+      {customer: data.customerID},
+      {company: data.companyID},
+      {status: 'Approved'}
+    ]})
+    if (analysisRequestApproved){
+      const alreadyExistsAnalysisNotCompleted = await Analysis.exists({$and: [
+        {request: analysisRequestApproved._id},
+        {status: {$not: 'Completed'}}
+      ]})
+      if (alreadyExistsAnalysisNotCompleted){
+        res.status(409).json({
+          message: "There's an ongoing analysis for the approved request from this customer and company that has not been completed yet"
+        })
+      }
     }
 
     await AnalysisRequest.create({

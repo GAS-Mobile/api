@@ -73,6 +73,7 @@ const getAllAnalyzes = async (req, res) => {
         },
         select: '-__v'
       })
+      .sort({analysisDate: -1})
       .select({__v:0})
       
     const data = paginate(page, limit, analyzes)
@@ -181,7 +182,9 @@ const getAnalysisByID = async (req, res) => {
 const updateAnalysisByID = async (req, res) => {
   /*
     #swagger.summary = "Private route for analysts"
-    #swagger.description = "Updates information about one analysis determined by ID. Requires the analyst logged in to be the one in charge of the analysis."
+    #swagger.description = "Updates information about one analysis determined by ID. 
+                            Requires the analyst logged in to be the one in charge of the analysis.
+                            If any of the scores of the analysis is updated, the score of the company analyzed will also be updated."
     #swagger.requestBody = {
       required: true,
       content: {
@@ -236,6 +239,15 @@ const updateAnalysisByID = async (req, res) => {
     }
 
     const analysis = await Analysis.findById(analysisID)
+      .populate({
+        path: 'request',
+        populate: {
+          path: 'company',
+          select: '-__v'
+        },
+        select: '-__v'
+      })
+    
     if (!analysis) {
       return res.status(404).json({ message: 'Analysis not found' })
     }
@@ -249,7 +261,11 @@ const updateAnalysisByID = async (req, res) => {
     if (data.status) analysis.status = data.status
 
     await analysis.save()
-  
+    if (data.firmLevelClaimScore || data.firmLevelExecutionalScore){
+      analysis.request.company.score = analysis.ascore
+      await analysis.request.company.save()
+    }
+    
     res.status(200).json({ message: 'Analysis updated successfully' })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while updating the analysis' })

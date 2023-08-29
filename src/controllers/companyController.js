@@ -1,5 +1,8 @@
 const { Company } = require('../models/Company')
+const { AnalysisRequest } = require('../models/AnalysisRequest')
+const { Analysis } = require('../models/Analysis')
 const { paginate } = require('../utils/pagination')
+const { formatCNPJ } = require('../utils/formatters')
 
 // Public route
 const getAllCompanies = async (req, res) => {
@@ -335,10 +338,190 @@ const deleteCompanyByID = async (req, res) => {
   }
 }
 
+// Public route
+const searchCompanies = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "Search companies by name and CNPJ."
+    #swagger.security = []
+    #swagger.parameters['sort'] = {
+      "in": "query",
+      "schema": {
+        '@enum': ['asc', 'desc']
+      } 
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            totalPages: 1,
+            companies: [
+              {
+                name: "XYZ Enterprises",
+                industry: "Finance",
+                cnpj: "00.705.432/0001-02",
+                headquartersLocation: {
+                  street: "456 Elm Avenue",
+                  city: "Townsville",
+                  state: "Province",
+                  postalCode: "50000-000",
+                  country: "Country"
+                }
+              },
+              {
+                name: "XYZ Enterprises",
+                industry: "Finance",
+                cnpj: "12.705.432/0001-02",
+                headquartersLocation: {
+                  street: "456 Elm Avenue",
+                  city: "Townsville",
+                  state: "Province",
+                  postalCode: "50000-000",
+                  country: "Country"
+                }
+              },
+            ]
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while searching companies"
+          }
+        }           
+      }
+    }
+  */
+  try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+    const query = req.query.q
+    const sort = req.query.sort
+    let companies = []
+    
+    const hasCharsInQuery = query && query.match(/\D/g) && query.match(/\D/g).length > 0
+    
+    if (query && hasCharsInQuery){
+      companies = await Company.find(
+        {name: { "$regex": query, "$options": "i" }
+      }).select({__v: 0, 'headquartersLocation._id': 0})
+    } 
+    else if (query && !hasCharsInQuery) {
+      companies = await Company.find({ $or: [
+        {name: { "$regex": query, "$options": "i" }},
+        {cnpj: { "$regex": "^" + formatCNPJ(query) }}
+      ]}).select({__v: 0, 'headquartersLocation._id': 0})
+    } 
+    else {
+      companies = await Company.find()
+        .select({__v: 0, 'headquartersLocation._id': 0})
+    }
+
+    if (sort && (sort === 'asc' || sort === 'desc')) {
+      companies = companies.sort((firstCompany, secondCompany) => {
+        if (sort === 'asc') {
+          return firstCompany.score - secondCompany.score;
+        } else {
+          return secondCompany.score - firstCompany.score;
+        }
+      });
+    }
+      
+    const data = paginate(page, limit, companies)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      companies: data.paginatedItems
+    })
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while searching companies' })
+  }
+}
+
+// Public route
+const getCompanyAnalyzes = async (req, res) => {
+  /*
+    #swagger.summary = "Public route"
+    #swagger.description = "List all analyzes for one company determined by ID."
+    #swagger.security = []
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            totalPages: 1,
+            analyzes: [
+              {
+                "_id": "64ebd211ae86d702181212db",
+                "request": "64ebce672927dsfadfe659b2",
+                "analyst": "64ebd1ee826d7bbb1821e96a",
+                "firmLevelClaimScore": 2,
+                "firmLevelExecutionalScore": 10,
+                "ascore": 6,
+                "status": "Completed",
+                "createdAt": "2023-08-27T22:45:37.231Z",
+                "analysisDate": "2023-08-27T22:47:39.311Z"
+              }
+            ]
+          }
+        }
+      }           
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while fetching the analyzes"
+          }
+        }           
+      }
+    }
+  */
+  try {
+    const companyID = req.params.id
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+
+    if (!companyID || companyID.length !== 24) {
+      return res.status(404).json({ message: 'Company not found' })
+    }
+
+    const company = await Company.findById(companyID)
+      .select({__v: 0, 'headquartersLocation._id': 0})
+
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' })
+    }
+
+    const analysisRequestsForThisCompany = await AnalysisRequest.find({$and: [
+      {company: companyID},
+      {status: 'Approved'}
+    ]})
+
+    const analyzesOfThisCompany = []
+    for(let analysisRequest of analysisRequestsForThisCompany){
+      let analysis = await Analysis.findOne({ request: analysisRequest._id })
+        .select('-__v')
+      analyzesOfThisCompany.push(analysis)
+    }
+
+    const data = paginate(page, limit, analyzesOfThisCompany)
+    res.status(200).json({
+      totalPages: data.totalPages,
+      analyzes: data.paginatedItems
+    })
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred while fetching the analyzes' })
+  }
+}
+
 module.exports = {
   createCompany,
   getAllCompanies,
+  searchCompanies,
   getCompanyByID,
   updateCompanyByID,
   deleteCompanyByID,
+  getCompanyAnalyzes,
 }

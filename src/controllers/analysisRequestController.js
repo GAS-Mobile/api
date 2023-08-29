@@ -9,7 +9,6 @@ const { paginate } = require('../utils/pagination')
 const createAnalysisRequest = async (req, res) => {
   /*
     #swagger.summary = "Private route for customers"
-    #swagger.security = []
     #swagger.description = "Creates a new analysis request."
     #swagger.requestBody = {
       required: true,
@@ -65,6 +64,19 @@ const createAnalysisRequest = async (req, res) => {
         }           
       }
     }
+    #swagger.responses[409] = {
+      ifStatusPresent: true,
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "A similar analysis request for this customer and company is already under analysis" },
+              { message: "There's an ongoing analysis for the approved request from this customer and company that has not been completed yet" }
+            ]
+          }
+        }           
+      }
+    }
     #swagger.responses[500] = {
       content: {
         "application/json": {
@@ -97,6 +109,32 @@ const createAnalysisRequest = async (req, res) => {
     const companyExists = await Company.exists({_id: data.companyID})
     if(!companyExists){
       return res.status(404).json({ message: 'Company not found' })
+    }
+
+    const alreadyExistsAnalysisRequestUnderAnalysis = await AnalysisRequest.exists({$and: [
+      {customer: data.customerID},
+      {company: data.companyID},
+      {status: 'In analysis'}
+    ]})
+    if (alreadyExistsAnalysisRequestUnderAnalysis){
+      return res.status(409).json({message: 'A similar analysis request for this customer and company is already under analysis'})
+    }
+    
+    const analysisRequestApproved = await AnalysisRequest.findOne({$and: [
+      {customer: data.customerID},
+      {company: data.companyID},
+      {status: 'Approved'}
+    ]})
+    if (analysisRequestApproved){
+      const alreadyExistsAnalysisNotCompleted = await Analysis.exists({$and: [
+        {request: analysisRequestApproved._id},
+        {status: {$ne: 'Completed'}}
+      ]})
+      if (alreadyExistsAnalysisNotCompleted){
+        return res.status(409).json({
+          message: "There's an ongoing analysis for the approved request from this customer and company that has not been completed yet"
+        })
+      }
     }
 
     await AnalysisRequest.create({
@@ -197,10 +235,11 @@ const getAllAnalysisRequests = async (req, res) => {
     let analysisRequests = await AnalysisRequest.find()
       .populate('company', '_id name industry cnpj headquartersLocation')
       .populate('customer', '_id user name cpf')
+      .sort({requestDate: -1})
       .select({__v:0})
-    
+      
     if(user.customerID){
-      analysisRequests = requests.filter((analysisRequest) => {
+      analysisRequests = analysisRequests.filter((analysisRequest) => {
         return analysisRequest.customer._id.toString() === user.customerID
       })
     }

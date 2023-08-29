@@ -6,6 +6,7 @@ const analysisRequestRoutes = require('./analysisRequestRoutes')
 const analysisRoutes = require('./analysisRoutes')
 const adminRoutes = require('./adminRoutes')
 const authRoutes = require('./authRoutes')
+const authorizedUserRoutes = require('./authorizedUserRoutes')
 
 router.use('/analyzes', analysisRoutes
 /*
@@ -288,6 +289,34 @@ router.use('/admins', adminRoutes
 router.use('/auth', authRoutes
 /* 
   #swagger.tags = ['Auth']
+*/
+)
+router.use('/authorized-user', authorizedUserRoutes
+/*
+  #swagger.tags = ['Authorized User']
+  #swagger.security = [{
+    "bearerAuth": []
+  }]
+  #swagger.responses[401] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "Unauthorized access"
+        }
+      }           
+    }
+  }
+  #swagger.responses[403] = {
+    ifStatusPresent: true,
+    content: {
+      "application/json": {
+        example: {
+          message: "You do not have sufficient privileges to access this route"
+        }
+      }           
+    }
+  }
 */
 )
 

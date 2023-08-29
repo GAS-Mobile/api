@@ -42,6 +42,10 @@ const doc = {
       name: 'Analyzes',
       description: 'Endpoints for handling analyzes and their data'
     },
+    {
+      name: 'Authorized User',
+      description: 'Endpoints for handling authorized users and their data'
+    },
   ],
   components: {
     securitySchemes:{

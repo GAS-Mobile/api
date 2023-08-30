@@ -572,7 +572,7 @@
             "content": {
               "application/json": {
                 "example": {
-                  "message": "To create an analysis request is necessary to send customerID, companyID and motive"
+                  "message": "To create an analysis request is necessary to send customerID, companyCNPJ and motive"
                 }
               }
             }

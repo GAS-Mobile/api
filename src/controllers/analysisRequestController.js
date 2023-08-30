@@ -4,6 +4,7 @@ const { Company } = require('../models/Company')
 const { Analyst } = require('../models/Analyst') 
 const { Analysis } = require('../models/Analysis') 
 const { paginate } = require('../utils/pagination')
+const { formatCNPJ } = require('../utils/formatters')
 
 // Private route for customers
 const createAnalysisRequest = async (req, res) => {
@@ -33,7 +34,7 @@ const createAnalysisRequest = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            message: "To create an analysis request is necessary to send customerID, companyID and motive"
+            message: "To create an analysis request is necessary to send customerID, companyCNPJ and motive"
           }
         }
       }           
@@ -91,9 +92,9 @@ const createAnalysisRequest = async (req, res) => {
     const data = req.body.analysisRequest
     const user = req.user
 
-    if (!data || !data.customerID || !data.companyID || !data.motive){
+    if (!data || !data.customerID || !data.companyCNPJ || !data.motive){
       return res.status(400).json({ 
-        message: 'To create an analysis request is necessary to send customerID, companyID and motive'
+        message: 'To create an analysis request is necessary to send customerID, companyCNPJ and motive'
       })
     }
 
@@ -106,14 +107,14 @@ const createAnalysisRequest = async (req, res) => {
       return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
     }
     
-    const companyExists = await Company.exists({_id: data.companyID})
-    if(!companyExists){
+    const company = await Company.findOne({cnpj: formatCNPJ(data.companyCNPJ)})
+    if(!company){
       return res.status(404).json({ message: 'Company not found' })
     }
 
     const alreadyExistsAnalysisRequestUnderAnalysis = await AnalysisRequest.exists({$and: [
       {customer: data.customerID},
-      {company: data.companyID},
+      {company: company._id},
       {status: 'In analysis'}
     ]})
     if (alreadyExistsAnalysisRequestUnderAnalysis){
@@ -122,7 +123,7 @@ const createAnalysisRequest = async (req, res) => {
     
     const analysisRequestApproved = await AnalysisRequest.findOne({$and: [
       {customer: data.customerID},
-      {company: data.companyID},
+      {company: company._id},
       {status: 'Approved'}
     ]})
     if (analysisRequestApproved){
@@ -139,7 +140,7 @@ const createAnalysisRequest = async (req, res) => {
 
     await AnalysisRequest.create({
       customer: data.customerID,
-      company: data.companyID,
+      company: company._id,
       motive: data.motive
     })
 

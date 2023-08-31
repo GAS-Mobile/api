@@ -3111,7 +3111,7 @@
       }
     },
     "/api/v1/auth/logout/": {
-      "post": {
+      "delete": {
         "tags": [
           "Auth"
         ],

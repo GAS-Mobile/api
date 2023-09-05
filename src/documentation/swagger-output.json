@@ -75,7 +75,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "analyzes": [
                     {
                       "_id": "64dfe7a07bc2d9ba5c315790",
@@ -109,7 +108,13 @@
                       "createdAt": "2023-08-18T21:50:24.770Z",
                       "analysisDate": "2023-08-18T21:50:24.770Z"
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 1,
+                    "pageSize": 20
+                  }
                 }
               }
             }
@@ -443,7 +448,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "analysisRequests": [
                     {
                       "_id": "64dfe622c212d95c33215769",
@@ -497,7 +501,13 @@
                       "status": "Approved",
                       "requestDate": "2023-08-18T21:47:00.881Z"
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 2,
+                    "pageSize": 20
+                  }
                 }
               }
             }
@@ -1007,7 +1017,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "companies": [
                     {
                       "name": "XYZ Enterprises",
@@ -1033,7 +1042,13 @@
                         "country": "Country"
                       }
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 2,
+                    "pageSize": 20
+                  }
                 }
               }
             }
@@ -1099,7 +1114,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "companies": [
                     {
                       "name": "XYZ Enterprises",
@@ -1125,7 +1139,13 @@
                         "country": "Country"
                       }
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 2,
+                    "pageSize": 20
+                  }
                 }
               }
             }
@@ -1531,7 +1551,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "analyzes": [
                     {
                       "_id": "64ebd211ae86d702181212db",
@@ -1544,7 +1563,13 @@
                       "createdAt": "2023-08-27T22:45:37.231Z",
                       "analysisDate": "2023-08-27T22:47:39.311Z"
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 1,
+                    "pageSize": 20
+                  }
                 }
               }
             }

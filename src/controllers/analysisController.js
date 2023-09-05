@@ -1,5 +1,4 @@
 const { Analysis } = require('../models/Analysis')
-const { paginate } = require('../utils/pagination')
 
 // Public route
 const getAllAnalyzes = async (req, res) => {
@@ -11,7 +10,6 @@ const getAllAnalyzes = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            totalPages: 1,
             analyzes: [
               {
                 "_id": "64dfe7a07bc2d9ba5c315790",
@@ -45,7 +43,13 @@ const getAllAnalyzes = async (req, res) => {
                 "createdAt": "2023-08-18T21:50:24.770Z",
                 "analysisDate": "2023-08-18T21:50:24.770Z"
               },
-            ]
+            ],
+            "info": {
+              "totalPages": 1,
+              "currentPage": 1,
+              "totalItems": 1,
+              "pageSize": 20
+            }
           }
         }
       }           
@@ -64,7 +68,7 @@ const getAllAnalyzes = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 20
 
-    let analyzes = await Analysis.find()
+    const analyzes = await Analysis.find()
       .populate({
         path: 'request',
         populate: {
@@ -74,12 +78,21 @@ const getAllAnalyzes = async (req, res) => {
         select: '-__v'
       })
       .sort({analysisDate: -1})
+      .skip((page-1)*limit)
+      .limit(limit)
       .select({__v:0})
       
-    const data = paginate(page, limit, analyzes)
+    const totalItems = await Analysis.countDocuments()
+    const totalPages = Math.ceil(totalItems / limit);
+
     res.status(200).json({
-      totalPages: data.totalPages,
-      analyzes: data.paginatedItems
+      analyzes: analyzes,
+      info: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalItems: totalItems,
+        pageSize: limit,
+      }
     })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching analyzes' })

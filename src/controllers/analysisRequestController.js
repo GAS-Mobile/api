@@ -3,7 +3,6 @@ const { Customer } = require('../models/Customer')
 const { Company } = require('../models/Company')
 const { Analyst } = require('../models/Analyst') 
 const { Analysis } = require('../models/Analysis') 
-const { paginate } = require('../utils/pagination')
 const { formatCNPJ } = require('../utils/formatters')
 
 // Private route for customers
@@ -159,7 +158,6 @@ const getAllAnalysisRequests = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            totalPages: 1,
             analysisRequests: [
               {
                 "_id": "64dfe622c212d95c33215769",
@@ -213,7 +211,13 @@ const getAllAnalysisRequests = async (req, res) => {
                 "status": "Approved",
                 "requestDate": "2023-08-18T21:47:00.881Z"
               }
-            ]
+            ],
+            "info": {
+              "totalPages": 1,
+              "currentPage": 1,
+              "totalItems": 2,
+              "pageSize": 20
+            }
           }
         }
       }           
@@ -233,22 +237,30 @@ const getAllAnalysisRequests = async (req, res) => {
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 20
 
-    let analysisRequests = await AnalysisRequest.find()
-      .populate('company', '_id name industry cnpj headquartersLocation')
-      .populate('customer', '_id user name cpf')
-      .sort({requestDate: -1})
-      .select({__v:0})
-      
+    let databaseQuery = {}
     if(user.customerID){
-      analysisRequests = analysisRequests.filter((analysisRequest) => {
-        return analysisRequest.customer._id.toString() === user.customerID
-      })
+      databaseQuery = {customer: user.customerID}
     }
+
+    const analysisRequests = await AnalysisRequest.find(databaseQuery)
+    .populate('company', '_id name industry cnpj headquartersLocation')
+    .populate('customer', '_id user name cpf')
+    .sort({requestDate: -1})
+    .skip((page-1)*limit)
+    .limit(limit)
+    .select({__v:0})
+
+    const totalItems = await AnalysisRequest.countDocuments(databaseQuery)
+    const totalPages = Math.ceil(totalItems / limit);
     
-    const data = paginate(page, limit, analysisRequests)
     res.status(200).json({
-      totalPages: data.totalPages,
-      analysisRequests: data.paginatedItems
+      analysisRequests: analysisRequests,
+      info: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalItems: totalItems,
+        pageSize: limit,
+      }
     })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching analysis requests' })

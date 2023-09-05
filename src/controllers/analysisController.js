@@ -29,7 +29,8 @@ const getAllAnalyzes = async (req, res) => {
                       "postalCode": "50000-000",
                       "country": "Country",
                       "_id": "64dfe6267bc2d9ba5c315754"
-                    }
+                    },
+                    "lastAnalysisDate": "2023-09-05T19:40:21.976Z"
                   },
                   "motive": "Lorem",
                   "status": "Approved",
@@ -127,7 +128,8 @@ const getAnalysisByID = async (req, res) => {
                     "postalCode": "50000-000",
                     "country": "Country",
                     "_id": "64dfe6267bc2d9ba5c315754"
-                  }
+                  },
+                  "lastAnalysisDate": "2023-09-05T19:40:21.976Z"
                 },
                 "motive": "Lorem",
                 "status": "Approved",
@@ -274,8 +276,15 @@ const updateAnalysisByID = async (req, res) => {
     if (data.status) analysis.status = data.status
 
     await analysis.save()
+
     if (data.firmLevelClaimScore || data.firmLevelExecutionalScore){
       analysis.request.company.score = analysis.ascore
+    }
+    if (analysis.status === 'Completed'){
+      analysis.request.company.lastAnalysisDate = Date.now()
+    }
+
+    if (data.firmLevelClaimScore || data.firmLevelExecutionalScore || analysis.status === 'Completed'){
       await analysis.request.company.save()
     }
     

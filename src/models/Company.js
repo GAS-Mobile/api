@@ -44,6 +44,10 @@ const companySchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  lastAnalysisDate: {
+    type: Date,
+    default: () => null,
+  },
   headquartersLocation: addressSchema,
 })
 

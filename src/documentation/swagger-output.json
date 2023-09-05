@@ -94,7 +94,8 @@
                             "postalCode": "50000-000",
                             "country": "Country",
                             "_id": "64dfe6267bc2d9ba5c315754"
-                          }
+                          },
+                          "lastAnalysisDate": "2023-09-05T19:40:21.976Z"
                         },
                         "motive": "Lorem",
                         "status": "Approved",
@@ -174,7 +175,8 @@
                           "postalCode": "50000-000",
                           "country": "Country",
                           "_id": "64dfe6267bc2d9ba5c315754"
-                        }
+                        },
+                        "lastAnalysisDate": "2023-09-05T19:40:21.976Z"
                       },
                       "motive": "Lorem",
                       "status": "Approved",

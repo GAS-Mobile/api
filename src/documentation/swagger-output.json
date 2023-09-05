@@ -215,7 +215,7 @@
           "Analyzes"
         ],
         "summary": "Private route for analysts",
-        "description": "Updates information about one analysis determined by ID.    Requires the analyst logged in to be the one in charge of the analysis.   If any of the scores of the analysis is updated, the score of the company analyzed will also be updated.",
+        "description": "Updates information about one analysis determined by ID. \r   Requires the analyst logged in to be the one in charge of the analysis.\r   If any of the scores of the analysis is updated, the score of the company analyzed will also be updated.",
         "parameters": [
           {
             "name": "id",
@@ -1609,7 +1609,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "customers": [
                     {
                       "_id": "64e681dafsd11f2d381231b9",
@@ -1629,7 +1628,13 @@
                       "name": "customer",
                       "cpf": "001.000.000-00"
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 2,
+                    "pageSize": 20
+                  }
                 }
               }
             }
@@ -2088,7 +2093,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "analysts": [
                     {
                       "_id": "64e681dafsd11f2d381231b9",
@@ -2108,7 +2112,13 @@
                       "name": "analyst",
                       "cpf": "001.000.000-00"
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 2,
+                    "pageSize": 20
+                  }
                 }
               }
             }
@@ -2600,7 +2610,6 @@
             "content": {
               "application/json": {
                 "example": {
-                  "totalPages": 1,
                   "admins": [
                     {
                       "_id": "64e681dafsd11f2d381231b9",
@@ -2616,7 +2625,13 @@
                         "email": "admin2@gmail.com"
                       }
                     }
-                  ]
+                  ],
+                  "info": {
+                    "totalPages": 1,
+                    "currentPage": 1,
+                    "totalItems": 2,
+                    "pageSize": 20
+                  }
                 }
               }
             }

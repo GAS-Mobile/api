@@ -1,7 +1,6 @@
 const { User } = require('../models/User')
 const { Analyst } = require('../models/Analyst')
 const { Customer } = require('../models/Customer')
-const { paginate } = require('../utils/pagination')
 
 // Private route for admins
 const createAnalyst = async (req, res) => {
@@ -92,7 +91,6 @@ const getAllAnalysts = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            totalPages: 1,
             analysts: [
               {
                 "_id": "64e681dafsd11f2d381231b9",
@@ -112,7 +110,13 @@ const getAllAnalysts = async (req, res) => {
                 "name": "analyst",
                 "cpf": "001.000.000-00"
               }
-            ]
+            ],
+            "info": {
+              "totalPages": 1,
+              "currentPage": 1,
+              "totalItems": 2,
+              "pageSize": 20
+            }
           }
         }
       }           
@@ -132,13 +136,22 @@ const getAllAnalysts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 20
 
     const analysts = await Analyst.find()
+      .skip((page-1)*limit)
+      .limit(limit)
       .populate('user', 'email _id')
       .select({__v: 0})
     
-    const data = paginate(page, limit, analysts)
+    const totalItems = await Analyst.countDocuments()
+    const totalPages = Math.ceil(totalItems / limit);
+
     res.status(200).json({
-      totalPages: data.totalPages,
-      analysts: data.paginatedItems
+      analysts: analysts,
+      info: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalItems: totalItems,
+        pageSize: limit,
+      }
     })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching analysts' })

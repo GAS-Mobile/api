@@ -56,8 +56,10 @@ const doc = {
     },
     schemas: {
       user: {
-        $email: 'user@gmail.com',
-        $password: '123456',
+        $user: {
+          $email: 'user@gmail.com',
+          $password: '123456',
+        }
       },
       tokens: {
         $accessToken: 'eyJhbOi12dIU6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJRCI6IjY0ZGYyZTE2MjVmYjQwMDllMmUwZjfasdfwZjc5ZSJ9gsIdDASdV4cCI6MTY5NjIzOH0.32314EPF_kcutZhfQL3HQkKVuudPg',
@@ -67,54 +69,68 @@ const doc = {
         $refreshToken: 'eyJhbOi12dIU6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJRCI6IjY0ZGYyZTE2MjVmYjQwMDllMmUwZjfasdfwZjc5ZSJ9gsIdDASdV4cCI6MTY5NjIzOH0.32314EPF_kcutZhfQL3HQkKVuudPg'
       },
       admin: {
-        $email: 'admin@gmail.com',
-        $password: '123456',
+        $admin: {
+          $email: 'admin@gmail.com',
+          $password: '123456',
+        }
       },
       analyst: {
-        $name: "analyst",
-        $cpf: "000.000.000-00",
-        $email: 'analyst@gmail.com',
-        $password: '123456',
+        $analyst: {
+          $name: "analyst",
+          $cpf: "000.000.000-00",
+          $email: 'analyst@gmail.com',
+          $password: '123456',
+        }
       },
       customer: {
-        $name: "customer",
-        $cpf: "000.000.000-00",
-        $email: 'customer@gmail.com',
-        $password: '123456',
+        $customer: {
+          $name: "customer",
+          $cpf: "000.000.000-00",
+          $email: 'customer@gmail.com',
+          $password: '123456',
+        }
       },
       company: {
-        $name: "XYZ Enterprises",
-        $industry: "Finance",
-        $cnpj: "00.705.432/0001-02",
-        $headquartersLocation: {
-          $street: "456 Elm Avenue",
-          $city: "Townsville",
-          $state: "Province",
-          $postalCode: "50000-000",
-          $country: "Country"
+        $company: {
+          $name: "XYZ Enterprises",
+          $industry: "Finance",
+          $cnpj: "00.705.432/0001-02",
+          $headquartersLocation: {
+            $street: "456 Elm Avenue",
+            $city: "Townsville",
+            $state: "Province",
+            $postalCode: "50000-000",
+            $country: "Country"
+          }
         }
       },
       analysisRequest: {
-        $customerID: "64dfeddasdbc2d9ba5c3575b",
-        $companyID: "64dfeddc2d9b92902mc3575b",
-        $motive: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        $analysisRequest: {
+          $customerID: "64dfeddasdbc2d9ba5c3575b",
+          $companyID: "64dfeddc2d9b92902mc3575b",
+          $motive: "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        }
       },
       analysisRequestStatus: {
-        $status: {
-          '@enum': [
-            "Approved",
-            "Reproved"
-          ]
+        $analysisRequest: {
+          $status: {
+            '@enum': [
+              "Approved",
+              "Reproved"
+            ]
+          }
         }
       },
       analysis: {
-        $firmLevelClaimScore: 8,
-        $firmLevelExecutionalScore: 10,
-        $status: {
-          '@enum': [
-            "In Progress",
-            "Completed"
-          ]
+        $analysis: {
+          $firmLevelClaimScore: 8,
+          $firmLevelExecutionalScore: 10,
+          $status: {
+            '@enum': [
+              "In Progress",
+              "Completed"
+            ]
+          }
         }
       }
     },

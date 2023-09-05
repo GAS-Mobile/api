@@ -215,7 +215,7 @@
           "Analyzes"
         ],
         "summary": "Private route for analysts",
-        "description": "Updates information about one analysis determined by ID. \r   Requires the analyst logged in to be the one in charge of the analysis.\r   If any of the scores of the analysis is updated, the score of the company analyzed will also be updated.",
+        "description": "Updates information about one analysis determined by ID.    Requires the analyst logged in to be the one in charge of the analysis.   If any of the scores of the analysis is updated, the score of the company analyzed will also be updated.",
         "parameters": [
           {
             "name": "id",
@@ -1232,7 +1232,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "ref": "#/components/schemas/company"
+                "$ref": "#/components/schemas/company"
               }
             }
           }
@@ -3359,18 +3359,26 @@
       "user": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "example": "user@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "123456"
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "user@gmail.com"
+              },
+              "password": {
+                "type": "string",
+                "example": "123456"
+              }
+            },
+            "required": [
+              "email",
+              "password"
+            ]
           }
         },
         "required": [
-          "email",
-          "password"
+          "user"
         ]
       },
       "tokens": {
@@ -3405,189 +3413,245 @@
       "admin": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "example": "admin@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "123456"
+          "admin": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "admin@gmail.com"
+              },
+              "password": {
+                "type": "string",
+                "example": "123456"
+              }
+            },
+            "required": [
+              "email",
+              "password"
+            ]
           }
         },
         "required": [
-          "email",
-          "password"
+          "admin"
         ]
       },
       "analyst": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "analyst"
-          },
-          "cpf": {
-            "type": "string",
-            "example": "000.000.000-00"
-          },
-          "email": {
-            "type": "string",
-            "example": "analyst@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "123456"
+          "analyst": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "analyst"
+              },
+              "cpf": {
+                "type": "string",
+                "example": "000.000.000-00"
+              },
+              "email": {
+                "type": "string",
+                "example": "analyst@gmail.com"
+              },
+              "password": {
+                "type": "string",
+                "example": "123456"
+              }
+            },
+            "required": [
+              "name",
+              "cpf",
+              "email",
+              "password"
+            ]
           }
         },
         "required": [
-          "name",
-          "cpf",
-          "email",
-          "password"
+          "analyst"
         ]
       },
       "customer": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "customer"
-          },
-          "cpf": {
-            "type": "string",
-            "example": "000.000.000-00"
-          },
-          "email": {
-            "type": "string",
-            "example": "customer@gmail.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "123456"
+          "customer": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "customer"
+              },
+              "cpf": {
+                "type": "string",
+                "example": "000.000.000-00"
+              },
+              "email": {
+                "type": "string",
+                "example": "customer@gmail.com"
+              },
+              "password": {
+                "type": "string",
+                "example": "123456"
+              }
+            },
+            "required": [
+              "name",
+              "cpf",
+              "email",
+              "password"
+            ]
           }
         },
         "required": [
-          "name",
-          "cpf",
-          "email",
-          "password"
+          "customer"
         ]
       },
       "company": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "XYZ Enterprises"
-          },
-          "industry": {
-            "type": "string",
-            "example": "Finance"
-          },
-          "cnpj": {
-            "type": "string",
-            "example": "00.705.432/0001-02"
-          },
-          "headquartersLocation": {
+          "company": {
             "type": "object",
             "properties": {
-              "street": {
+              "name": {
                 "type": "string",
-                "example": "456 Elm Avenue"
+                "example": "XYZ Enterprises"
               },
-              "city": {
+              "industry": {
                 "type": "string",
-                "example": "Townsville"
+                "example": "Finance"
               },
-              "state": {
+              "cnpj": {
                 "type": "string",
-                "example": "Province"
+                "example": "00.705.432/0001-02"
               },
-              "postalCode": {
-                "type": "string",
-                "example": "50000-000"
-              },
-              "country": {
-                "type": "string",
-                "example": "Country"
+              "headquartersLocation": {
+                "type": "object",
+                "properties": {
+                  "street": {
+                    "type": "string",
+                    "example": "456 Elm Avenue"
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Townsville"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "Province"
+                  },
+                  "postalCode": {
+                    "type": "string",
+                    "example": "50000-000"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "Country"
+                  }
+                },
+                "required": [
+                  "street",
+                  "city",
+                  "state",
+                  "postalCode",
+                  "country"
+                ]
               }
             },
             "required": [
-              "street",
-              "city",
-              "state",
-              "postalCode",
-              "country"
+              "name",
+              "industry",
+              "cnpj",
+              "headquartersLocation"
             ]
           }
         },
         "required": [
-          "name",
-          "industry",
-          "cnpj",
-          "headquartersLocation"
+          "company"
         ]
       },
       "analysisRequest": {
         "type": "object",
         "properties": {
-          "customerID": {
-            "type": "string",
-            "example": "64dfeddasdbc2d9ba5c3575b"
-          },
-          "companyID": {
-            "type": "string",
-            "example": "64dfeddc2d9b92902mc3575b"
-          },
-          "motive": {
-            "type": "string",
-            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+          "analysisRequest": {
+            "type": "object",
+            "properties": {
+              "customerID": {
+                "type": "string",
+                "example": "64dfeddasdbc2d9ba5c3575b"
+              },
+              "companyID": {
+                "type": "string",
+                "example": "64dfeddc2d9b92902mc3575b"
+              },
+              "motive": {
+                "type": "string",
+                "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+              }
+            },
+            "required": [
+              "customerID",
+              "companyID",
+              "motive"
+            ]
           }
         },
         "required": [
-          "customerID",
-          "companyID",
-          "motive"
+          "analysisRequest"
         ]
       },
       "analysisRequestStatus": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "Approved",
-              "Reproved"
+          "analysisRequest": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "Approved",
+                  "Reproved"
+                ]
+              }
+            },
+            "required": [
+              "status"
             ]
           }
         },
         "required": [
-          "status"
+          "analysisRequest"
         ]
       },
       "analysis": {
         "type": "object",
         "properties": {
-          "firmLevelClaimScore": {
-            "type": "number",
-            "example": 8
-          },
-          "firmLevelExecutionalScore": {
-            "type": "number",
-            "example": 10
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "In Progress",
-              "Completed"
+          "analysis": {
+            "type": "object",
+            "properties": {
+              "firmLevelClaimScore": {
+                "type": "number",
+                "example": 8
+              },
+              "firmLevelExecutionalScore": {
+                "type": "number",
+                "example": 10
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "In Progress",
+                  "Completed"
+                ]
+              }
+            },
+            "required": [
+              "firmLevelClaimScore",
+              "firmLevelExecutionalScore",
+              "status"
             ]
           }
         },
         "required": [
-          "firmLevelClaimScore",
-          "firmLevelExecutionalScore",
-          "status"
+          "analysis"
         ]
       }
     }

@@ -81,9 +81,9 @@ const createCompany = async (req, res) => {
       required: true,
       content: {
         "application/json": {
-          schema: {
-            ref: "#/components/schemas/company"
-          }  
+          schema:{
+            $ref: "#/components/schemas/company"
+          } 
         }
       }
     }

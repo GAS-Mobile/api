@@ -1,7 +1,6 @@
 const { Company } = require('../models/Company')
 const { AnalysisRequest } = require('../models/AnalysisRequest')
 const { Analysis } = require('../models/Analysis')
-const { paginate } = require('../utils/pagination')
 const { formatCNPJ } = require('../utils/formatters')
 
 // Public route
@@ -14,7 +13,6 @@ const getAllCompanies = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            totalPages: 1,
             companies: [
               {
                 name: "XYZ Enterprises",
@@ -40,7 +38,13 @@ const getAllCompanies = async (req, res) => {
                   country: "Country"
                 }
               },
-            ]
+            ],
+            "info": {
+              "totalPages": 1,
+              "currentPage": 1,
+              "totalItems": 2,
+              "pageSize": 20
+            }
           }
         }
       }           
@@ -60,12 +64,21 @@ const getAllCompanies = async (req, res) => {
     const limit = parseInt(req.query.limit) || 20
 
     const companies = await Company.find()
+      .skip((page-1)*limit)
+      .limit(limit)
       .select({__v: 0, 'headquartersLocation._id': 0})
       
-    const data = paginate(page, limit, companies)
+    const totalItems = await Company.countDocuments()
+    const totalPages = Math.ceil(totalItems / limit);
+
     res.status(200).json({
-      totalPages: data.totalPages,
-      companies: data.paginatedItems
+      companies: companies,
+      info: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalItems: totalItems,
+        pageSize: limit,
+      }
     })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching companies' })
@@ -354,7 +367,6 @@ const searchCompanies = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            totalPages: 1,
             companies: [
               {
                 name: "XYZ Enterprises",
@@ -380,7 +392,13 @@ const searchCompanies = async (req, res) => {
                   country: "Country"
                 }
               },
-            ]
+            ],
+            "info": {
+              "totalPages": 1,
+              "currentPage": 1,
+              "totalItems": 2,
+              "pageSize": 20
+            }
           }
         }
       }           
@@ -401,39 +419,47 @@ const searchCompanies = async (req, res) => {
     const query = req.query.q
     const sort = req.query.sort
     let companies = []
+    let databaseQuery = {}
     
     const hasCharsInQuery = query && query.match(/\D/g) && query.match(/\D/g).length > 0
     
     if (query && hasCharsInQuery){
-      companies = await Company.find(
-        {name: { "$regex": query, "$options": "i" }
-      }).select({__v: 0, 'headquartersLocation._id': 0})
+      databaseQuery = {name: { "$regex": query, "$options": "i" }}
     } 
     else if (query && !hasCharsInQuery) {
-      companies = await Company.find({ $or: [
-        {name: { "$regex": query, "$options": "i" }},
-        {cnpj: { "$regex": "^" + formatCNPJ(query) }}
-      ]}).select({__v: 0, 'headquartersLocation._id': 0})
-    } 
-    else {
-      companies = await Company.find()
-        .select({__v: 0, 'headquartersLocation._id': 0})
+      databaseQuery = { 
+        $or: [
+          {name: { "$regex": query, "$options": "i" }},
+          {cnpj: { "$regex": "^" + formatCNPJ(query) }}
+        ]
+      }
     }
 
     if (sort && (sort === 'asc' || sort === 'desc')) {
-      companies = companies.sort((firstCompany, secondCompany) => {
-        if (sort === 'asc') {
-          return firstCompany.score - secondCompany.score;
-        } else {
-          return secondCompany.score - firstCompany.score;
-        }
-      });
+      companies = await Company.find(databaseQuery)
+      .sort({score: sort})
+      .skip((page-1)*limit)
+      .limit(limit)
+      .select({__v: 0, 'headquartersLocation._id': 0})
     }
+    else {
+      companies = await Company.find(databaseQuery)
+      .skip((page-1)*limit)
+      .limit(limit)
+      .select({__v: 0, 'headquartersLocation._id': 0})
+    }
+
+    const totalItems = await Company.countDocuments(databaseQuery)
+    const totalPages = Math.ceil(totalItems / limit)
       
-    const data = paginate(page, limit, companies)
     res.status(200).json({
-      totalPages: data.totalPages,
-      companies: data.paginatedItems
+      companies: companies,
+      info: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalItems: totalItems,
+        pageSize: limit,
+      }
     })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while searching companies' })
@@ -450,7 +476,6 @@ const getCompanyAnalyzes = async (req, res) => {
       content: {
         "application/json": {
           example: {
-            totalPages: 1,
             analyzes: [
               {
                 "_id": "64ebd211ae86d702181212db",
@@ -463,7 +488,13 @@ const getCompanyAnalyzes = async (req, res) => {
                 "createdAt": "2023-08-27T22:45:37.231Z",
                 "analysisDate": "2023-08-27T22:47:39.311Z"
               }
-            ]
+            ],
+            "info": {
+              "totalPages": 1,
+              "currentPage": 1,
+              "totalItems": 1,
+              "pageSize": 20
+            }
           }
         }
       }           
@@ -494,10 +525,16 @@ const getCompanyAnalyzes = async (req, res) => {
       return res.status(404).json({ message: 'Company not found' })
     }
 
-    const analysisRequestsForThisCompany = await AnalysisRequest.find({$and: [
-      {company: companyID},
-      {status: 'Approved'}
-    ]})
+    const databaseQuery = {
+      $and: [
+        {company: companyID},
+        {status: 'Approved'}
+      ]
+    }
+    
+    const analysisRequestsForThisCompany = await AnalysisRequest.find(databaseQuery)
+      .skip((page-1)*limit)
+      .limit(limit)
 
     const analyzesOfThisCompany = []
     for(let analysisRequest of analysisRequestsForThisCompany){
@@ -506,10 +543,17 @@ const getCompanyAnalyzes = async (req, res) => {
       analyzesOfThisCompany.push(analysis)
     }
 
-    const data = paginate(page, limit, analyzesOfThisCompany)
+    const totalItems = await AnalysisRequest.countDocuments(databaseQuery)
+    const totalPages = Math.ceil(totalItems / limit);
+
     res.status(200).json({
-      totalPages: data.totalPages,
-      analyzes: data.paginatedItems
+      analyzes: analyzesOfThisCompany,
+      info: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalItems: totalItems,
+        pageSize: limit,
+      }
     })
   } catch (error) {
     res.status(500).json({ message: 'An error occurred while fetching the analyzes' })

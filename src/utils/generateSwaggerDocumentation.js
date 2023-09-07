@@ -12,6 +12,10 @@ const doc = {
       url: 'http://localhost:3000',
       description: 'Development server'
     },
+    {
+      url: 'https://gas-mobile-api.onrender.com/',
+      description: 'Production server'
+    },
   ],
   tags: [
     {

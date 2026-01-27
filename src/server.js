@@ -17,4 +17,4 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 dbConnection()
 
-app.listen(PORT, () => console.log(`listening on port:${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`listening on port:${PORT} (0.0.0.0)`));

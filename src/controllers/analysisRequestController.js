@@ -361,6 +361,123 @@ const getAnalysisRequestByID = async (req, res) => {
   }
 }
 
+// Private route for customers
+const updateAnalysisRequestMotiveByID = async (req, res) => {
+  /*
+    #swagger.summary = "Private route for customers"
+    #swagger.description = "Updates the motive of an analysis request. Customers can only update their own requests that are pending or under analysis."
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              analysisRequest: {
+                type: "object",
+                properties: {
+                  motive: {
+                    type: "string",
+                    description: "New motive for the analysis request"
+                  }
+                }
+              }
+            }
+          }  
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Analysis request motive updated successfully"
+          }
+        }           
+      }
+    }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          example: {
+            responsePossibilities: [
+              { message: "To update an analysis request a motive must be provided" },
+              { message: "Cannot update an analysis request that has already been approved or rejected" }
+            ]
+          }
+        }           
+      }
+    }
+    #swagger.responses[403] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "You do not have the necessary permissions to access this route"
+          }
+        }           
+      }
+    }
+    #swagger.responses[404] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "Analysis request not found"
+          }
+        }           
+      }
+    }
+    #swagger.responses[500] = {
+      content: {
+        "application/json": {
+          example: {
+            message: "An error occurred while updating the analysis request"
+          }
+        }           
+      }
+    }
+  */
+  try {
+    const user = req.user
+    const analysisRequestID = req.params.id
+    const data = req.body.analysisRequest
+
+    if (!data || !data.motive){
+      return res.status(400).json({ 
+        message: 'To update an analysis request a motive must be provided' 
+      })
+    }
+
+    if (!analysisRequestID || analysisRequestID.length !== 24) {
+      return res.status(404).json({ message: 'Analysis request not found' })
+    }
+    
+    const analysisRequest = await AnalysisRequest.findById(analysisRequestID)
+    if (!analysisRequest) {
+      return res.status(404).json({ message: 'Analysis request not found' })
+    }
+
+    // Check if the customer owns this request
+    if(user.customerID && analysisRequest.customer.toString() !== user.customerID){
+      return res.status(403).json({message: 'You do not have the necessary permissions to access this route'})
+    }
+
+    // Check if the request can be updated (only pending or under analysis)
+    if (analysisRequest.status === 'Approved' || analysisRequest.status === 'Rejected') {
+      return res.status(400).json({ 
+        message: 'Cannot update an analysis request that has already been approved or rejected' 
+      });
+    }
+
+    analysisRequest.motive = data.motive
+    await analysisRequest.save()
+
+    res.status(200).json({ message: 'Analysis request motive updated successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'An error occurred while updating the analysis request' })
+  }
+}
+
 // Private route for analysts
 const updateAnalysisRequestByID = async (req, res) => {
   /*
@@ -512,6 +629,7 @@ module.exports = {
   createAnalysisRequest,
   getAllAnalysisRequests,
   getAnalysisRequestByID,
+  updateAnalysisRequestMotiveByID,
   updateAnalysisRequestByID,
   deleteAnalysisRequestByID
 }

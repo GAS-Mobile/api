@@ -22,7 +22,6 @@ const analysisRequestSchema = new mongoose.Schema({
   motive: {
     type: String,
     required: true,
-    immutable: true
   },
   status: {
     type: String,

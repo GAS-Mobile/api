@@ -5,6 +5,7 @@ const { authorize } = require('../utils/auth')
 router.get('/', authorize(['Analyst', 'Customer']), analysisRequestController.getAllAnalysisRequests)
 router.post('/create/', authorize(['Customer']), analysisRequestController.createAnalysisRequest)
 router.get('/:id/', authorize(['Analyst', 'Customer']), analysisRequestController.getAnalysisRequestByID)
+router.put('/:id/', authorize(['Customer']), analysisRequestController.updateAnalysisRequestMotiveByID)
 router.patch('/:id/', authorize(['Analyst']), analysisRequestController.updateAnalysisRequestByID)
 router.delete('/:id/', authorize(['Analyst', 'Customer']), analysisRequestController.deleteAnalysisRequestByID)
 
